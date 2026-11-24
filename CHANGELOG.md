@@ -2,6 +2,18 @@
 
 Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions selon [SemVer](https://semver.org/lang/fr/).
 
+## [1.1.0] — 2026-11-24
+
+### Ajouté
+
+- Indicateurs d'état sans dépendre de la couleur : attribut `state-labels` (I / O), slots `on` et `off` pour un contenu personnalisé, parts `on-label` et `off-label`, propriété `--switch-label-color`.
+- Prise en charge de l'écriture de droite à gauche (`dir="rtl"`) : « on » place le curseur en fin de ligne.
+- Règle CSS documentée pour réserver la place de l'élément avant le chargement du module.
+
+### Modifié
+
+- `event.preventDefault()` sur `click` annule désormais la bascule, comme pour `<input type="checkbox">`. Les événements `input` et `change` partent après la propagation complète du `click`.
+
 ## [1.0.0] — 2026-11-24
 
 ### Ajouté

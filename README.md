@@ -75,6 +75,8 @@ sw.toggle();          // idem
 | `orientation` | `horizontal` (défaut) ou `vertical`. |
 | `off-color` | Couleur de la piste à l'état off (toute couleur CSS valide). |
 | `on-color` | Couleur de la piste à l'état on. |
+| `state-labels` | Affiche des indicateurs d'état dans la piste : `I` à l'état on, `O` à l'état off (symboles marche/arrêt, comme l'option d'accessibilité d'iOS). Voir [Indicateurs d'état](#indicateurs-détat). |
+| `dir` | Hérité de la page ou d'un parent. En `dir="rtl"`, « on » place le curseur à gauche. |
 | `aria-label`, `aria-labelledby`, `aria-describedby` | Libellé accessible quand il n'y a pas de `<label>`. |
 | `tabindex` | Posé à `0` automatiquement. Une valeur fournie par l'auteur est respectée. |
 
@@ -87,6 +89,7 @@ Les couleurs invalides données en attribut sont ignorées : la couleur passe al
 | `checked` | `boolean`, l'état courant (reflété sur l'attribut). |
 | `defaultChecked` | `boolean`, l'état restauré par `form.reset()`. |
 | `disabled`, `required`, `name`, `value`, `orientation` | Reflètent les attributs du même nom. |
+| `stateLabels` | `boolean`, reflète l'attribut `state-labels`. |
 | `form`, `labels`, `validity`, `validationMessage`, `willValidate` | Comme pour un champ natif. |
 | `checkValidity()`, `reportValidity()`, `setCustomValidity(msg)` | Validation, comme pour un champ natif. |
 | `toggle(force?)` | Bascule l'état, ou le fixe si `force` est un booléen. Renvoie le nouvel état. |
@@ -99,7 +102,21 @@ Comme pour les champs natifs, une modification par script (`checked = …`, `tog
 |---|---|
 | `input` | À chaque bascule par l'utilisateur (souris, toucher, clavier, clic sur le `<label>`). Il remonte le DOM (`bubbles`) et traverse les shadow roots (`composed`). |
 | `change` | Juste après `input`. Il remonte le DOM (`bubbles`). |
-| `click` | Le clavier (Espace, Entrée) passe aussi par un `click`, comme pour un bouton natif. |
+| `click` | Le clavier (Espace, Entrée) passe aussi par un `click`, comme pour un bouton natif. Annulable, voir ci-dessous. |
+
+### Annuler une bascule
+
+Comme avec `<input type="checkbox">`, appeler `event.preventDefault()` dans un écouteur `click` annule la bascule. L'interrupteur revient à son état précédent et aucun `input` ni `change` n'est émis. Pendant l'écouteur, `checked` vaut déjà le **nouvel** état, comme pour une case native.
+
+```js
+sw.addEventListener('click', (event) => {
+  if (!sw.checked && !confirm('Désactiver la sauvegarde automatique ?')) {
+    event.preventDefault();
+  }
+});
+```
+
+Les événements `input` et `change` partent une fois le `click` entièrement propagé.
 
 ## Orientation : attribut ou CSS
 
@@ -131,6 +148,7 @@ En vertical, **« on » = curseur en haut**, et la couleur « on » colore la pi
 | `--switch-padding` | `0.1875em` | Marge entre le curseur et le bord de la piste |
 | `--switch-length` | `1.65 ×` la largeur | Longueur de la piste (grand côté) |
 | `--switch-focus-color` | `#0b57d0` / `#a8c7fa` | Anneau de focus |
+| `--switch-label-color` | `#ffffff` | Indicateurs d'état (I / O ou contenu des slots) |
 | `--switch-duration` | `180ms` | Durée de l'animation |
 | `--switch-vertical` | `0` | Orientation (voir plus haut) |
 
@@ -152,11 +170,57 @@ Les tailles sont en `em` : l'interrupteur suit la taille de police de son parent
 |---|---|
 | `track` | La piste (le fond arrondi). |
 | `thumb` | Le curseur rond. |
+| `on-label` | L'indicateur visible à l'état on. |
+| `off-label` | L'indicateur visible à l'état off. |
 
 ```css
 gc-toggle-switch.carre::part(track) { border-radius: .3em; }
 gc-toggle-switch.carre::part(thumb) { border-radius: .2em; }
 ```
+
+## Indicateurs d'état
+
+Par défaut, l'état se lit à la position du curseur et à la couleur. Pour qu'il se lise aussi **sans la couleur**, ce qui aide les personnes daltoniennes ou malvoyantes, ajoutez `state-labels` :
+
+```html
+<gc-toggle-switch state-labels aria-label="Wi-Fi"></gc-toggle-switch>
+```
+
+L'indicateur occupe l'extrémité de la piste laissée libre par le curseur : `I` quand l'interrupteur est sur on, `O` quand il est sur off.
+
+Vous pouvez aussi mettre votre propre contenu (texte court, icône) avec les slots `on` et `off`. Les indicateurs s'affichent alors automatiquement :
+
+```html
+<gc-toggle-switch orientation="vertical" aria-label="Bit 0">
+  <span slot="on">1</span><span slot="off">0</span>
+</gc-toggle-switch>
+```
+
+Le contenu est affiché à 60 % de la taille du texte et en gras. Il est masqué aux technologies d'assistance : le libellé accessible reste celui du `<label>` ou de l'`aria-label`. Pour un texte plus long que deux caractères (`ON` / `OFF`), allongez la piste avec `--switch-length`.
+
+## Avant le chargement du script
+
+Tant que le module n'est pas chargé, l'élément est inconnu du navigateur : il ne prend aucune place, puis la mise en page saute à l'arrivée du composant. Pour réserver la place dès le premier affichage, copiez cette règle dans la feuille de style de la page :
+
+```css
+gc-toggle-switch:not(:defined) {
+  --_v0: var(--switch-vertical, 0);
+  --_s0: calc(var(--switch-thumb-size, 1.25em) + 2 * var(--switch-padding, 0.1875em));
+  --_t0: calc(var(--switch-length, calc(var(--_s0) * 1.65)) - var(--_s0));
+  display: inline-block;
+  vertical-align: middle;
+  width: calc(var(--_s0) + var(--_t0) * (1 - var(--_v0)));
+  height: calc(var(--_s0) + var(--_t0) * var(--_v0));
+  border-radius: calc(var(--_s0) / 2);
+  background: var(--switch-off-color, #767676);
+  opacity: 0.5;
+}
+gc-toggle-switch[orientation="vertical" i]:not(:defined) { --_v0: 1; }
+gc-toggle-switch[orientation="horizontal" i]:not(:defined) { --_v0: 0; }
+gc-toggle-switch:not(:defined) > * { display: none; }
+```
+
+Elle reprend les mêmes propriétés CSS que le composant : la place réservée a exactement la taille finale, quelle que soit l'orientation. Les contenus de slots sont masqués jusqu'au chargement.
 
 Pour styler selon l'état, on peut utiliser l'attribut reflété, `gc-toggle-switch[checked]::part(thumb)`, ou l'état personnalisé `gc-toggle-switch:state(checked)` dans les navigateurs qui le prennent en charge.
 
@@ -166,6 +230,8 @@ Pour styler selon l'état, on peut utiliser l'attribut reflété, `gc-toggle-swi
 - **Libellé** : `<label for="id">` ou `<label>` englobant (grâce à `formAssociated`, cliquer sur le libellé bascule l'interrupteur), sinon `aria-label` / `aria-labelledby`.
 - **Clavier** : l'interrupteur est focusable avec Tab. **Espace** le bascule au relâchement de la touche, comme un bouton natif, sans faire défiler la page. **Entrée** le bascule aussi et n'envoie pas le formulaire.
 - **Focus visible** : un anneau autour de la piste, seulement en navigation clavier (`:focus-visible`).
+- **Sans dépendre de la couleur** : l'attribut `state-labels` ou les slots `on` / `off` affichent l'état en clair (critère WCAG 1.4.1).
+- **Droite à gauche** : le sens suit `dir` (`:dir(rtl)`). « On » est toujours en fin de ligne.
 - **Mouvement réduit** : avec `prefers-reduced-motion: reduce`, il n'y a plus de transition.
 - **Thèmes clair et sombre** : les couleurs par défaut utilisent `light-dark()` et suivent le `color-scheme` de la page. Déclarez `:root { color-scheme: light dark; }` pour suivre `prefers-color-scheme`, ou `color-scheme: dark` pour forcer le sombre. Dans les navigateurs sans `light-dark()`, une media query `prefers-color-scheme` prend le relais. Contrastes des couleurs par défaut :
   - thème clair : piste off 4,5:1, piste on 5,1:1, contre le curseur blanc comme contre un fond blanc ;
@@ -194,7 +260,7 @@ Le composant utilise des navigateurs récents : Custom Elements, Shadow DOM, `El
 ## Fichiers
 
 - `gc-toggle-switch.js` : le composant (module ES, autonome). C'est le seul fichier à copier dans un projet.
-- `demo.html` : démonstration de toutes les variantes (horizontal, vertical, couleurs, tailles, désactivé, formulaire, thèmes, journal des événements).
+- `demo.html` : démonstration de toutes les variantes (horizontal, vertical, couleurs, tailles, indicateurs d'état, droite à gauche, annulation, désactivé, formulaire, thèmes, journal des événements).
 - `index.html` : redirige vers la démo (pratique pour GitHub Pages).
 - `docs/apercu.jpg` : capture utilisée dans ce README.
 - `CHANGELOG.md` : historique des versions.

@@ -52,6 +52,24 @@
     }
     .square::part(track) { border-radius: .3em; }
     .square::part(thumb) { border-radius: .2em; }
+    .lettres { --switch-length: 3.2em; }
+
+    /* Réserve la place avant le chargement du module (voir README). */
+    gc-toggle-switch:not(:defined) {
+      --_v0: var(--switch-vertical, 0);
+      --_s0: calc(var(--switch-thumb-size, 1.25em) + 2 * var(--switch-padding, 0.1875em));
+      --_t0: calc(var(--switch-length, calc(var(--_s0) * 1.65)) - var(--_s0));
+      display: inline-block;
+      vertical-align: middle;
+      width: calc(var(--_s0) + var(--_t0) * (1 - var(--_v0)));
+      height: calc(var(--_s0) + var(--_t0) * var(--_v0));
+      border-radius: calc(var(--_s0) / 2);
+      background: var(--switch-off-color, #767676);
+      opacity: 0.5;
+    }
+    gc-toggle-switch[orientation="vertical" i]:not(:defined) { --_v0: 1; }
+    gc-toggle-switch[orientation="horizontal" i]:not(:defined) { --_v0: 0; }
+    gc-toggle-switch:not(:defined) > * { display: none; }
   </style>
 </head>
 <body>
@@ -89,14 +107,14 @@
     </div>
     <p class="note">Un rang de bits façon convertisseur binaire :</p>
     <div class="row" style="gap:.6rem" role="group" aria-label="Octet">
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 7"></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 6" checked></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 5"></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 4"></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 3" checked></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 2"></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 1"></gc-toggle-switch>
-      <gc-toggle-switch orientation="vertical" aria-label="Bit 0" checked></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 7"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 6" checked><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 5"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 4"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 3" checked><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 2"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 1"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
+      <gc-toggle-switch orientation="vertical" aria-label="Bit 0" checked><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
       <output id="byte" aria-live="polite"></output>
     </div>
   </section>
@@ -111,6 +129,37 @@
       <div class="item compact"><gc-toggle-switch id="c5"></gc-toggle-switch><label for="c5">Compact</label></div>
       <div class="item"><gc-toggle-switch id="c6" class="square" checked></gc-toggle-switch><label for="c6"><code>::part()</code> carré</label></div>
     </div>
+  </section>
+
+  <section>
+    <h2>Indicateurs d'état</h2>
+    <div class="row">
+      <div class="item"><gc-toggle-switch id="s1" state-labels></gc-toggle-switch><label for="s1"><code>state-labels</code> (I / O)</label></div>
+      <div class="item"><gc-toggle-switch id="s2" state-labels checked></gc-toggle-switch><label for="s2">idem, activé</label></div>
+      <div class="item"><gc-toggle-switch id="s3" state-labels orientation="vertical"></gc-toggle-switch><label for="s3">Vertical</label></div>
+      <div class="item lettres"><gc-toggle-switch id="s4" checked><span slot="on">ON</span><span slot="off">OFF</span></gc-toggle-switch><label for="s4">Slots <code>on</code> / <code>off</code></label></div>
+      <div class="item"><gc-toggle-switch id="s5" off-color="#b3261e" state-labels></gc-toggle-switch><label for="s5">Avec couleurs personnalisées</label></div>
+    </div>
+    <p class="note">Les indicateurs ne dépendent pas de la couleur : utiles aux personnes daltoniennes ou malvoyantes.</p>
+  </section>
+
+  <section>
+    <h2>Droite à gauche (<code>dir="rtl"</code>)</h2>
+    <div class="row" dir="rtl" lang="ar">
+      <div class="item"><gc-toggle-switch id="r1"></gc-toggle-switch><label for="r1">واي فاي</label></div>
+      <div class="item"><gc-toggle-switch id="r2" checked state-labels></gc-toggle-switch><label for="r2">بلوتوث</label></div>
+      <div class="item"><gc-toggle-switch id="r3" orientation="vertical" checked></gc-toggle-switch><label for="r3">عمودي</label></div>
+    </div>
+    <p class="note">En RTL, « on » place le curseur à gauche (fin de ligne).</p>
+  </section>
+
+  <section>
+    <h2>Annuler une bascule (<code>preventDefault()</code>)</h2>
+    <div class="row">
+      <div class="item"><gc-toggle-switch id="lock"></gc-toggle-switch><label for="lock">Autoriser la modification</label></div>
+      <div class="item"><gc-toggle-switch id="guarded" checked></gc-toggle-switch><label for="guarded">Sauvegarde automatique (protégée)</label></div>
+    </div>
+    <p class="note" id="guardMsg" aria-live="polite">Tant que « Autoriser la modification » est éteint, un écouteur <code>click</code> appelle <code>preventDefault()</code> : l'interrupteur ne bascule pas et aucun <code>change</code> n'est émis.</p>
   </section>
 
   <section>
@@ -181,6 +230,17 @@
   };
   bits.forEach((b) => b.addEventListener('change', showByte));
   showByte();
+
+  // Annulation
+  const guardMsg = document.getElementById('guardMsg');
+  document.getElementById('guarded').addEventListener('click', (e) => {
+    if (!document.getElementById('lock').checked) {
+      e.preventDefault();
+      guardMsg.textContent = 'Modification refusée : activez d\'abord « Autoriser la modification ».';
+    } else {
+      guardMsg.textContent = 'Modification autorisée.';
+    }
+  });
 
   // Fieldset
   document.getElementById('fsToggle').addEventListener('change', (e) => {
