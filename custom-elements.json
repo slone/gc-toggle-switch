@@ -50,7 +50,8 @@
           ],
           "events": [
             { "name": "input", "type": { "text": "Event" }, "description": "The user toggled the switch. Bubbles and is composed." },
-            { "name": "change", "type": { "text": "Event" }, "description": "Fired right after input. Bubbles." }
+            { "name": "change", "type": { "text": "Event" }, "description": "Fired right after input. Bubbles." },
+            { "name": "toggle", "type": { "text": "CustomEvent<{ oldChecked: boolean; newChecked: boolean }>" }, "description": "Fired right after change, with the old and new states. Does not bubble." }
           ],
           "slots": [
             { "name": "on", "description": "Indicator shown when on (short text or icon)." },

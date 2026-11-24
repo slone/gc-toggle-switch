@@ -40,7 +40,7 @@ The `<gc-toggle-switch>` element is defined automatically, only once even if the
 The file is also available from the jsDelivr CDN. Pin a version (git tag) in production:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.3.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.4.0/gc-toggle-switch.js"></script>
 ```
 
 > ES modules do not load from `file://`. Serve the page over HTTP, for example with `python -m http.server` in this folder, then open `http://localhost:8000/demo.html`.
@@ -109,11 +109,18 @@ As with native fields, a change made by script (`checked = …`, `toggle()`) **f
 |---|---|
 | `input` | Each time the user toggles the switch (mouse, touch, drag, keyboard, click on the `<label>`). It bubbles and crosses shadow roots (`composed`). |
 | `change` | Right after `input`. It bubbles. |
+| `toggle` | Right after `change`. A `CustomEvent` whose `detail` holds `oldChecked` and `newChecked`. It does not bubble, so that a switch inside a `<details>` does not trigger that element's own `toggle` listeners: listen on the switch itself, or in the capture phase. |
 | `click` | The keyboard (Space, Enter) and the end of a drag that changes the state also go through a `click`, as with a native button. Cancelable, see below. |
+
+```js
+sw.addEventListener('toggle', ({ detail }) => {
+  console.log(detail.oldChecked, '→', detail.newChecked);
+});
+```
 
 ### Cancelling a toggle
 
-As with `<input type="checkbox">`, calling `event.preventDefault()` in a `click` listener cancels the toggle. The switch returns to its previous state and neither `input` nor `change` is fired. Inside the listener, `checked` already holds the **new** state, as with a native checkbox.
+As with `<input type="checkbox">`, calling `event.preventDefault()` in a `click` listener cancels the toggle. The switch returns to its previous state and none of `input`, `change` and `toggle` is fired. Inside the listener, `checked` already holds the **new** state, as with a native checkbox.
 
 ```js
 sw.addEventListener('click', (event) => {
@@ -123,7 +130,7 @@ sw.addEventListener('click', (event) => {
 });
 ```
 
-`input` and `change` are fired once the `click` has fully propagated.
+`input`, `change` and `toggle` are fired once the `click` has fully propagated.
 
 ## Busy state
 

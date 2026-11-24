@@ -7,6 +7,14 @@
 
 export type ToggleSwitchOrientation = 'horizontal' | 'vertical';
 
+/** `detail` of the `toggle` event. */
+export interface ToggleSwitchToggleDetail {
+  readonly oldChecked: boolean;
+  readonly newChecked: boolean;
+}
+
+export type ToggleSwitchToggleEvent = CustomEvent<ToggleSwitchToggleDetail>;
+
 export declare class ToggleSwitch extends HTMLElement {
   static readonly formAssociated: true;
   static readonly observedAttributes: string[];
@@ -69,6 +77,14 @@ export declare class ToggleSwitch extends HTMLElement {
    * @returns the new state
    */
   toggle(force?: boolean): boolean;
+
+  /** `toggle`: fired after `change` when the user toggles the switch. Does not bubble. */
+  addEventListener(type: 'toggle', listener: (this: ToggleSwitch, ev: ToggleSwitchToggleEvent) => unknown, options?: boolean | AddEventListenerOptions): void;
+  addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => unknown, options?: boolean | AddEventListenerOptions): void;
+  addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+  removeEventListener(type: 'toggle', listener: (this: ToggleSwitch, ev: ToggleSwitchToggleEvent) => unknown, options?: boolean | EventListenerOptions): void;
+  removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => unknown, options?: boolean | EventListenerOptions): void;
+  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
 declare global {

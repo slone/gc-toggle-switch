@@ -336,6 +336,13 @@
     log.textContent = `change  ${describe(e.target)} → ${e.target.checked ? 'on' : 'off'}\n` + log.textContent;
   });
 
+  // toggle does not bubble, but it can be caught in the capture phase.
+  document.addEventListener('toggle', (e) => {
+    if (e.target.localName !== 'gc-toggle-switch') return;
+    const word = (on) => (on ? 'on' : 'off');
+    log.textContent = `toggle  ${describe(e.target)}: ${word(e.detail.oldChecked)} → ${word(e.detail.newChecked)}\n` + log.textContent;
+  }, true);
+
   // ---- Byte ----------------------------------------------------------------
   const bits = [...document.querySelectorAll('#byteGroup gc-toggle-switch')];
   const byte = document.getElementById('byte');

@@ -447,7 +447,8 @@ export class ToggleSwitch extends HTMLElement {
     // As with <input type="checkbox">: the state flips right away (click
     // listeners see the new state); once the event has fully propagated, it
     // is reverted if a listener called preventDefault().
-    this.#setChecked(!this.#checked);
+    const oldChecked = this.#checked;
+    this.#setChecked(!oldChecked);
 
     let settled = false;
     const settle = (e) => {
@@ -455,10 +456,14 @@ export class ToggleSwitch extends HTMLElement {
       settled = true;
       window.removeEventListener('click', settle);
       if (event.defaultPrevented) {
-        this.#setChecked(!this.#checked);
+        this.#setChecked(oldChecked);
       } else {
+        const newChecked = this.#checked;
         this.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
         this.dispatchEvent(new Event('change', { bubbles: true }));
+        // Does not bubble, like the native `toggle` event: a switch inside a
+        // <details> must not trigger the listeners of that <details>.
+        this.dispatchEvent(new CustomEvent('toggle', { detail: { oldChecked, newChecked } }));
       }
     };
     // End of propagation: a listener added on window runs last.

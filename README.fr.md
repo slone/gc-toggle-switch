@@ -40,7 +40,7 @@ L'élément `<gc-toggle-switch>` est défini automatiquement, une seule fois mê
 Le fichier est aussi disponible par CDN via jsDelivr. En production, fixez une version (tag git) :
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.3.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.4.0/gc-toggle-switch.js"></script>
 ```
 
 > Un module ES ne se charge pas depuis `file://`. Servez la page en HTTP, par exemple avec `python -m http.server` dans ce dossier, puis ouvrez `http://localhost:8000/demo.html`.
@@ -109,11 +109,18 @@ Comme pour les champs natifs, une modification par script (`checked = …`, `tog
 |---|---|
 | `input` | À chaque bascule par l'utilisateur (souris, toucher, glisser, clavier, clic sur le `<label>`). Il remonte le DOM (`bubbles`) et traverse les shadow roots (`composed`). |
 | `change` | Juste après `input`. Il remonte le DOM (`bubbles`). |
+| `toggle` | Juste après `change`. `CustomEvent` dont `detail` contient `oldChecked` et `newChecked`. Il ne remonte pas le DOM, pour qu'un interrupteur placé dans un `<details>` ne déclenche pas les écouteurs `toggle` de celui-ci : écoutez-le sur l'interrupteur, ou en phase de capture. |
 | `click` | Le clavier (Espace, Entrée) et la fin d'un glisser qui change l'état passent aussi par un `click`, comme pour un bouton natif. Annulable, voir ci-dessous. |
+
+```js
+sw.addEventListener('toggle', ({ detail }) => {
+  console.log(detail.oldChecked, '→', detail.newChecked);
+});
+```
 
 ### Annuler une bascule
 
-Comme avec `<input type="checkbox">`, appeler `event.preventDefault()` dans un écouteur `click` annule la bascule. L'interrupteur revient à son état précédent et aucun `input` ni `change` n'est émis. Pendant l'écouteur, `checked` vaut déjà le **nouvel** état, comme pour une case native.
+Comme avec `<input type="checkbox">`, appeler `event.preventDefault()` dans un écouteur `click` annule la bascule. L'interrupteur revient à son état précédent et aucun des événements `input`, `change` et `toggle` n'est émis. Pendant l'écouteur, `checked` vaut déjà le **nouvel** état, comme pour une case native.
 
 ```js
 sw.addEventListener('click', (event) => {
@@ -123,7 +130,7 @@ sw.addEventListener('click', (event) => {
 });
 ```
 
-Les événements `input` et `change` partent une fois le `click` entièrement propagé.
+Les événements `input`, `change` et `toggle` partent une fois le `click` entièrement propagé.
 
 ## État occupé (`busy`)
 

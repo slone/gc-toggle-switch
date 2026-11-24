@@ -2,6 +2,16 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.4.0] — 2026-11-24
+
+### Added
+
+- `toggle` event (`CustomEvent`), fired after `change` with `detail.oldChecked` and `detail.newChecked`. It does not bubble.
+
+### Fixed
+
+- A cancelled `click` now restores the state from before the click, even if a listener changed `checked` in the meantime.
+
 ## [1.3.0] — 2026-11-24
 
 ### Added
