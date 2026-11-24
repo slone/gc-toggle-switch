@@ -1,11 +1,11 @@
 /**
- * <toggle-switch> — interrupteur à bascule (« toggle switch ») accessible,
+ * <gc-toggle-switch> — interrupteur à bascule (« toggle switch ») accessible,
  * sans dépendance, sous forme de Custom Element natif et associé aux formulaires.
  *
  * Usage :
- *   <script type="module" src="./toggle-switch.js"></script>
+ *   <script type="module" src="./gc-toggle-switch.js"></script>
  *   <label for="wifi">Wi-Fi</label>
- *   <toggle-switch id="wifi" name="wifi" checked></toggle-switch>
+ *   <gc-toggle-switch id="wifi" name="wifi" checked></gc-toggle-switch>
  *
  * Voir README.md pour la documentation complète.
  */
@@ -255,7 +255,7 @@ export class ToggleSwitch extends HTMLElement {
     else this.setAttribute('orientation', v);
   }
 
-  get type() { return 'toggle-switch'; }
+  get type() { return 'gc-toggle-switch'; }
   get form() { return this.#internals.form; }
   get labels() { return this.#internals.labels; }
   get validity() { return this.#internals.validity; }
@@ -365,6 +365,6 @@ export class ToggleSwitch extends HTMLElement {
   }
 }
 
-if (!customElements.get('toggle-switch')) {
-  customElements.define('toggle-switch', ToggleSwitch);
+if (!customElements.get('gc-toggle-switch')) {
+  customElements.define('gc-toggle-switch', ToggleSwitch);
 }

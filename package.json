@@ -1,15 +1,15 @@
 {
-  "name": "toggle-switch",
+  "name": "gc-toggle-switch",
   "version": "1.0.0",
   "description": "Interrupteur à bascule (toggle switch) accessible : Custom Element natif, sans dépendance, associé aux formulaires.",
   "type": "module",
-  "main": "toggle-switch.js",
-  "module": "toggle-switch.js",
+  "main": "gc-toggle-switch.js",
+  "module": "gc-toggle-switch.js",
   "exports": {
-    ".": "./toggle-switch.js"
+    ".": "./gc-toggle-switch.js"
   },
   "files": [
-    "toggle-switch.js"
+    "gc-toggle-switch.js"
   ],
   "keywords": [
     "web-component",
@@ -17,6 +17,7 @@
     "toggle",
     "switch",
     "toggle-switch",
+    "gc-toggle-switch",
     "form-associated",
     "accessibility",
     "a11y"

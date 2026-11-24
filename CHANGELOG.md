@@ -6,7 +6,7 @@ Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), ver
 
 ### Ajouté
 
-- Élément `<toggle-switch>` : Custom Element natif, module ES sans dépendance.
+- Élément `<gc-toggle-switch>` : Custom Element natif, module ES sans dépendance.
 - États on/off, attribut `checked` reflété, événements `input` et `change`.
 - Association aux formulaires : `name`, `value`, `disabled`, `required`, `form.reset()`, `<fieldset disabled>`.
 - Orientation horizontale ou verticale, par l'attribut `orientation` ou la propriété CSS `--switch-vertical`.

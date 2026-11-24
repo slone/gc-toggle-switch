@@ -1,6 +1,6 @@
-# `<toggle-switch>`
+# `<gc-toggle-switch>`
 
-Interrupteur à bascule réutilisable : un Custom Element natif, sans framework ni dépendance, accessible et associé aux formulaires.
+Interrupteur à bascule réutilisable : un Custom Element natif (le préfixe `gc-` évite les collisions de nom avec d'autres bibliothèques), sans framework ni dépendance, accessible et associé aux formulaires.
 
 ![Aperçu de la page de démonstration : interrupteurs horizontaux, verticaux, colorés et de différentes tailles](docs/apercu.jpg)
 
@@ -19,24 +19,24 @@ Les lecteurs d'écran annoncent donc « interrupteur, activé » et non « case 
 
 ## Installation
 
-Il n'y a rien à compiler. Copiez `toggle-switch.js` dans votre projet et importez-le comme module ES :
+Il n'y a rien à compiler. Copiez `gc-toggle-switch.js` dans votre projet et importez-le comme module ES :
 
 ```html
-<script type="module" src="./toggle-switch.js"></script>
+<script type="module" src="./gc-toggle-switch.js"></script>
 ```
 
 ou, depuis un autre module :
 
 ```js
-import { ToggleSwitch } from './toggle-switch.js';
+import { ToggleSwitch } from './gc-toggle-switch.js';
 ```
 
-L'élément `<toggle-switch>` est défini automatiquement, une seule fois même si le fichier est importé plusieurs fois.
+L'élément `<gc-toggle-switch>` est défini automatiquement, une seule fois même si le fichier est importé plusieurs fois.
 
 Une fois le dépôt public sur GitHub, le fichier est aussi disponible par CDN via jsDelivr. Remplacez `<utilisateur>` et `<dépôt>`, et fixez une version (tag git) en production :
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/<utilisateur>/<dépôt>@1.0.0/toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/<utilisateur>/<dépôt>@1.0.0/gc-toggle-switch.js"></script>
 ```
 
 > Un module ES ne se charge pas depuis `file://`. Servez la page en HTTP, par exemple avec `python -m http.server` dans ce dossier, puis ouvrez `http://localhost:8000/demo.html`.
@@ -45,15 +45,15 @@ Une fois le dépôt public sur GitHub, le fichier est aussi disponible par CDN v
 
 ```html
 <label for="wifi">Wi-Fi</label>
-<toggle-switch id="wifi" name="wifi" checked></toggle-switch>
+<gc-toggle-switch id="wifi" name="wifi" checked></gc-toggle-switch>
 
-<toggle-switch aria-label="Mode avion"></toggle-switch>
+<gc-toggle-switch aria-label="Mode avion"></gc-toggle-switch>
 
-<label>Bluetooth <toggle-switch name="bt"></toggle-switch></label>
+<label>Bluetooth <gc-toggle-switch name="bt"></gc-toggle-switch></label>
 
-<toggle-switch orientation="vertical" aria-label="Bit 0"></toggle-switch>
+<gc-toggle-switch orientation="vertical" aria-label="Bit 0"></gc-toggle-switch>
 
-<toggle-switch off-color="#b3261e" on-color="#0b57d0" aria-label="Alarme"></toggle-switch>
+<gc-toggle-switch off-color="#b3261e" on-color="#0b57d0" aria-label="Alarme"></gc-toggle-switch>
 ```
 
 ```js
@@ -106,11 +106,11 @@ Comme pour les champs natifs, une modification par script (`checked = …`, `tog
 Deux façons de passer en vertical :
 
 ```html
-<toggle-switch orientation="vertical"></toggle-switch>
+<gc-toggle-switch orientation="vertical"></gc-toggle-switch>
 ```
 
 ```css
-.colonne-de-bits toggle-switch { --switch-vertical: 1; }   /* 0 = horizontal, 1 = vertical */
+.colonne-de-bits gc-toggle-switch { --switch-vertical: 1; }   /* 0 = horizontal, 1 = vertical */
 ```
 
 **L'attribut l'emporte toujours** sur la propriété CSS. On peut donc fixer une orientation par défaut en CSS, pour toute une zone ou selon une media query, puis la changer pour un seul élément avec `orientation="horizontal"` ou `orientation="vertical"`.
@@ -139,7 +139,7 @@ Les tailles sont en `em` : l'interrupteur suit la taille de police de son parent
 **Priorité des couleurs :** attribut `off-color` / `on-color` > propriété CSS > défaut.
 
 ```css
-.marque toggle-switch {
+.marque gc-toggle-switch {
   --switch-off-color: light-dark(#b3261e, #f2b8b5);
   --switch-on-color: light-dark(#0b57d0, #a8c7fa);
   --switch-thumb-color: light-dark(#fff, #1f2229);
@@ -154,11 +154,11 @@ Les tailles sont en `em` : l'interrupteur suit la taille de police de son parent
 | `thumb` | Le curseur rond. |
 
 ```css
-toggle-switch.carre::part(track) { border-radius: .3em; }
-toggle-switch.carre::part(thumb) { border-radius: .2em; }
+gc-toggle-switch.carre::part(track) { border-radius: .3em; }
+gc-toggle-switch.carre::part(thumb) { border-radius: .2em; }
 ```
 
-Pour styler selon l'état, on peut utiliser l'attribut reflété, `toggle-switch[checked]::part(thumb)`, ou l'état personnalisé `toggle-switch:state(checked)` dans les navigateurs qui le prennent en charge.
+Pour styler selon l'état, on peut utiliser l'attribut reflété, `gc-toggle-switch[checked]::part(thumb)`, ou l'état personnalisé `gc-toggle-switch:state(checked)` dans les navigateurs qui le prennent en charge.
 
 ## Accessibilité
 
@@ -193,12 +193,12 @@ Le composant utilise des navigateurs récents : Custom Elements, Shadow DOM, `El
 
 ## Fichiers
 
-- `toggle-switch.js` : le composant (module ES, autonome). C'est le seul fichier à copier dans un projet.
+- `gc-toggle-switch.js` : le composant (module ES, autonome). C'est le seul fichier à copier dans un projet.
 - `demo.html` : démonstration de toutes les variantes (horizontal, vertical, couleurs, tailles, désactivé, formulaire, thèmes, journal des événements).
 - `index.html` : redirige vers la démo (pratique pour GitHub Pages).
 - `docs/apercu.jpg` : capture utilisée dans ce README.
 - `CHANGELOG.md` : historique des versions.
-- `package.json` : métadonnées (module ES, licence). Il est marqué `"private": true` pour éviter une publication npm accidentelle ; le nom `toggle-switch` est probablement déjà pris sur npm, choisissez un nom (ou un *scope*) libre avant de publier.
+- `package.json` : métadonnées (module ES, licence). Il est marqué `"private": true` pour éviter une publication npm accidentelle. Le nom `gc-toggle-switch` était libre sur npm au 24/11/2026 ; retirez `"private"` pour publier.
 
 ## Développement
 
