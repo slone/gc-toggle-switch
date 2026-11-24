@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>&lt;toggle-switch&gt; — démonstration</title>
+  <script type="module" src="./toggle-switch.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: light-dark(#ffffff, #16181d);
+      --fg: light-dark(#1b1d22, #e6e8ec);
+      --muted: light-dark(#5a606b, #a3a9b5);
+      --card: light-dark(#f5f6f8, #1f2229);
+      --border: light-dark(#d9dce2, #343842);
+      --code: light-dark(#eceef2, #2a2e37);
+      font-family: system-ui, sans-serif;
+      line-height: 1.5;
+    }
+    :root[data-theme="light"] { color-scheme: light; }
+    :root[data-theme="dark"] { color-scheme: dark; }
+    body { margin: 0; background: var(--bg); color: var(--fg); }
+    main { max-width: 60rem; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    header { display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between; }
+    h1 { font-size: 1.6rem; margin: 0; }
+    h2 { font-size: 1.15rem; margin: 0 0 .75rem; }
+    p.lead { color: var(--muted); margin: .25rem 0 1.5rem; }
+    code { background: var(--code); padding: .05em .35em; border-radius: .25em; font-size: .9em; }
+    section { background: var(--card); border: 1px solid var(--border); border-radius: .75rem; padding: 1rem 1.25rem; margin-block: 1rem; }
+    .row { display: flex; flex-wrap: wrap; gap: 1.25rem 2rem; align-items: center; }
+    .item { display: flex; align-items: center; gap: .6rem; }
+    .item.col { flex-direction: column; gap: .4rem; }
+    .note { color: var(--muted); font-size: .9rem; margin: .75rem 0 0; }
+    fieldset { border: 1px solid var(--border); border-radius: .5rem; padding: .75rem 1rem; margin: 0; }
+    legend { padding: 0 .35rem; }
+    form .grid { display: grid; grid-template-columns: max-content auto; gap: .75rem 1rem; align-items: center; }
+    button { font: inherit; padding: .4rem .9rem; border-radius: .4rem; border: 1px solid var(--border); background: var(--bg); color: var(--fg); cursor: pointer; }
+    button:focus-visible { outline: 2px solid light-dark(#0b57d0, #a8c7fa); outline-offset: 2px; }
+    pre { background: var(--code); padding: .75rem; border-radius: .5rem; overflow: auto; margin: .75rem 0 0; min-height: 1.5em; }
+    #log { max-height: 10rem; }
+    .theme { display: flex; gap: .4rem; align-items: center; }
+    .theme button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+
+    /* Variantes pilotées par CSS */
+    .vertical-by-css toggle-switch { --switch-vertical: 1; }
+    .big { font-size: 1.75rem; }
+    .compact { --switch-thumb-size: 1em; --switch-padding: 2px; --switch-length: 2.25em; }
+    .brand {
+      --switch-off-color: light-dark(#b3261e, #f2b8b5);
+      --switch-on-color: light-dark(#0b57d0, #a8c7fa);
+      --switch-thumb-color: light-dark(#fff, #1f2229);
+    }
+    .square::part(track) { border-radius: .3em; }
+    .square::part(thumb) { border-radius: .2em; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1><code>&lt;toggle-switch&gt;</code></h1>
+    <div class="theme" role="group" aria-label="Thème de la page">
+      <span>Thème :</span>
+      <button type="button" data-set-theme="" aria-pressed="true">Système</button>
+      <button type="button" data-set-theme="light" aria-pressed="false">Clair</button>
+      <button type="button" data-set-theme="dark" aria-pressed="false">Sombre</button>
+    </div>
+  </header>
+  <p class="lead">Interrupteur à bascule (« toggle switch ») : Custom Element natif, accessible, associé aux formulaires.</p>
+
+  <section>
+    <h2>Horizontal (par défaut)</h2>
+    <div class="row">
+      <div class="item"><toggle-switch id="h1"></toggle-switch><label for="h1">Wi-Fi</label></div>
+      <div class="item"><toggle-switch id="h2" checked></toggle-switch><label for="h2">Bluetooth (activé au départ)</label></div>
+      <div class="item"><toggle-switch aria-label="Mode avion"></toggle-switch><span aria-hidden="true">Mode avion (<code>aria-label</code>)</span></div>
+      <label class="item">Libellé englobant <toggle-switch></toggle-switch></label>
+    </div>
+  </section>
+
+  <section>
+    <h2>Vertical (« on » = curseur en haut)</h2>
+    <div class="row">
+      <div class="item col"><toggle-switch id="v1" orientation="vertical"></toggle-switch><label for="v1"><code>orientation="vertical"</code></label></div>
+      <div class="item col"><toggle-switch id="v2" orientation="vertical" checked></toggle-switch><label for="v2">idem, activé</label></div>
+      <div class="vertical-by-css row">
+        <div class="item col"><toggle-switch id="v3"></toggle-switch><label for="v3"><code>--switch-vertical: 1</code></label></div>
+        <div class="item col"><toggle-switch id="v4" orientation="horizontal"></toggle-switch><label for="v4">CSS vertical, mais<br><code>orientation="horizontal"</code> l'emporte</label></div>
+      </div>
+    </div>
+    <p class="note">Un rang de bits façon convertisseur binaire :</p>
+    <div class="row" style="gap:.6rem" role="group" aria-label="Octet">
+      <toggle-switch orientation="vertical" aria-label="Bit 7"></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 6" checked></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 5"></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 4"></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 3" checked></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 2"></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 1"></toggle-switch>
+      <toggle-switch orientation="vertical" aria-label="Bit 0" checked></toggle-switch>
+      <output id="byte" aria-live="polite"></output>
+    </div>
+  </section>
+
+  <section>
+    <h2>Couleurs, tailles et parts</h2>
+    <div class="row">
+      <div class="item"><toggle-switch id="c1" off-color="#b3261e" on-color="#0b57d0"></toggle-switch><label for="c1">Attributs <code>off-color</code> / <code>on-color</code></label></div>
+      <div class="item brand"><toggle-switch id="c2" checked></toggle-switch><label for="c2">Propriétés CSS (adaptées au thème)</label></div>
+      <div class="item"><toggle-switch id="c3" off-color="rebeccapurple"></toggle-switch><label for="c3">Seulement <code>off-color</code></label></div>
+      <div class="item big"><toggle-switch id="c4" checked></toggle-switch><label for="c4">Grand (font-size)</label></div>
+      <div class="item compact"><toggle-switch id="c5"></toggle-switch><label for="c5">Compact</label></div>
+      <div class="item"><toggle-switch id="c6" class="square" checked></toggle-switch><label for="c6"><code>::part()</code> carré</label></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Désactivé</h2>
+    <div class="row">
+      <div class="item"><toggle-switch id="d1" disabled></toggle-switch><label for="d1">Off désactivé</label></div>
+      <div class="item"><toggle-switch id="d2" disabled checked></toggle-switch><label for="d2">On désactivé</label></div>
+      <fieldset id="fs" disabled>
+        <legend>Fieldset désactivé</legend>
+        <div class="item"><toggle-switch id="d3" checked></toggle-switch><label for="d3">Hérite de <code>&lt;fieldset disabled&gt;</code></label></div>
+      </fieldset>
+      <div class="item"><toggle-switch id="fsToggle" checked></toggle-switch><label for="fsToggle">Fieldset désactivé</label></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Dans un formulaire</h2>
+    <form id="form">
+      <div class="grid">
+        <toggle-switch id="f1" name="newsletter" checked></toggle-switch><label for="f1">Newsletter (<code>name="newsletter"</code>, valeur par défaut <code>on</code>)</label>
+        <toggle-switch id="f2" name="theme" value="sombre"></toggle-switch><label for="f2">Thème sombre (<code>value="sombre"</code>)</label>
+        <toggle-switch id="f3" name="cgu" value="ok" required></toggle-switch><label for="f3">J'accepte les conditions (<code>required</code>)</label>
+        <toggle-switch id="f4" name="vertical" orientation="vertical" checked></toggle-switch><label for="f4">Vertical dans le formulaire</label>
+      </div>
+      <p class="row" style="gap:.6rem">
+        <button type="submit">Envoyer</button>
+        <button type="reset">Réinitialiser</button>
+      </p>
+    </form>
+    <p class="note">Données envoyées (FormData) :</p>
+    <pre id="formOut">—</pre>
+  </section>
+
+  <section>
+    <h2>Journal des événements</h2>
+    <pre id="log" aria-live="off"></pre>
+  </section>
+</main>
+
+<script type="module">
+  import './toggle-switch.js';
+
+  // Thème
+  const themeButtons = document.querySelectorAll('[data-set-theme]');
+  for (const btn of themeButtons) {
+    btn.addEventListener('click', () => {
+      const t = btn.dataset.setTheme;
+      if (t) document.documentElement.dataset.theme = t;
+      else delete document.documentElement.dataset.theme;
+      for (const b of themeButtons) b.setAttribute('aria-pressed', String(b === btn));
+    });
+  }
+
+  // Journal
+  const log = document.getElementById('log');
+  const describe = (el) => el.id || el.getAttribute('aria-label') || el.name || 'toggle-switch';
+  document.addEventListener('change', (e) => {
+    if (e.target.localName !== 'toggle-switch') return;
+    log.textContent = `change  ${describe(e.target)} → ${e.target.checked ? 'on' : 'off'}\n` + log.textContent;
+  });
+
+  // Octet
+  const bits = [...document.querySelectorAll('[aria-label="Octet"] toggle-switch')];
+  const byte = document.getElementById('byte');
+  const showByte = () => {
+    const n = bits.reduce((acc, b) => (acc << 1) | (b.checked ? 1 : 0), 0);
+    byte.textContent = `= ${n} (0x${n.toString(16).toUpperCase().padStart(2, '0')})`;
+  };
+  bits.forEach((b) => b.addEventListener('change', showByte));
+  showByte();
+
+  // Fieldset
+  document.getElementById('fsToggle').addEventListener('change', (e) => {
+    document.getElementById('fs').disabled = e.target.checked;
+  });
+
+  // Formulaire
+  const form = document.getElementById('form');
+  const out = document.getElementById('formOut');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const entries = [...new FormData(form)].map(([k, v]) => `${k}=${v}`);
+    out.textContent = entries.length ? entries.join('\n') : '(aucune donnée)';
+  });
+  form.addEventListener('reset', () => { out.textContent = '— (formulaire réinitialisé)'; });
+</script>
+</body>
+</html>

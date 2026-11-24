@@ -1,0 +1,218 @@
+# `<toggle-switch>`
+
+Interrupteur à bascule réutilisable : un Custom Element natif, sans framework ni dépendance, accessible et associé aux formulaires.
+
+![Aperçu de la page de démonstration : interrupteurs horizontaux, verticaux, colorés et de différentes tailles](docs/apercu.jpg)
+
+**Démonstration :** [`demo.html`](demo.html). Si GitHub Pages est activé sur ce dépôt, elle est en ligne à `https://<utilisateur>.github.io/<dépôt>/`.
+
+## Le nom de ce contrôle
+
+En UX, ce contrôle s'appelle un **toggle switch** (ou simplement **switch**). C'est le terme d'Apple (`UISwitch`, « switch » dans les Human Interface Guidelines), de Material Design et de WAI-ARIA (`role="switch"`). On dit aussi « interrupteur » ou « bouton à bascule » en français.
+
+Ce n'est pas une **case à cocher** (*checkbox*). Les deux portent un état binaire, mais :
+
+- un **switch** dit « allumé / éteint » (*on / off*) et prend effet **immédiatement**, comme un interrupteur électrique (activer le Wi-Fi) ;
+- une **case à cocher** dit « coché / non coché » (*checked / unchecked*). Elle sert plutôt à faire un choix qui sera validé plus tard, par exemple à l'envoi d'un formulaire. Elle peut aussi avoir un état intermédiaire (*indeterminate*), ce que le switch n'a pas.
+
+Les lecteurs d'écran annoncent donc « interrupteur, activé » et non « case à cocher, cochée ».
+
+## Installation
+
+Il n'y a rien à compiler. Copiez `toggle-switch.js` dans votre projet et importez-le comme module ES :
+
+```html
+<script type="module" src="./toggle-switch.js"></script>
+```
+
+ou, depuis un autre module :
+
+```js
+import { ToggleSwitch } from './toggle-switch.js';
+```
+
+L'élément `<toggle-switch>` est défini automatiquement, une seule fois même si le fichier est importé plusieurs fois.
+
+Une fois le dépôt public sur GitHub, le fichier est aussi disponible par CDN via jsDelivr. Remplacez `<utilisateur>` et `<dépôt>`, et fixez une version (tag git) en production :
+
+```html
+<script type="module" src="https://cdn.jsdelivr.net/gh/<utilisateur>/<dépôt>@1.0.0/toggle-switch.js"></script>
+```
+
+> Un module ES ne se charge pas depuis `file://`. Servez la page en HTTP, par exemple avec `python -m http.server` dans ce dossier, puis ouvrez `http://localhost:8000/demo.html`.
+
+## Usage
+
+```html
+<label for="wifi">Wi-Fi</label>
+<toggle-switch id="wifi" name="wifi" checked></toggle-switch>
+
+<toggle-switch aria-label="Mode avion"></toggle-switch>
+
+<label>Bluetooth <toggle-switch name="bt"></toggle-switch></label>
+
+<toggle-switch orientation="vertical" aria-label="Bit 0"></toggle-switch>
+
+<toggle-switch off-color="#b3261e" on-color="#0b57d0" aria-label="Alarme"></toggle-switch>
+```
+
+```js
+const sw = document.querySelector('#wifi');
+sw.addEventListener('change', () => console.log(sw.checked));
+sw.checked = false;   // ne déclenche pas d'événement
+sw.toggle();          // idem
+```
+
+## Attributs
+
+| Attribut | Rôle |
+|---|---|
+| `checked` | État « on ». Il est reflété : la propriété `checked` met l'attribut à jour, et inversement. L'attribut présent dans le HTML (ou posé avec `setAttribute`) définit aussi l'**état par défaut** utilisé par `form.reset()`. |
+| `disabled` | Désactive l'interrupteur : il ne bascule plus, sort de l'ordre de tabulation et n'est pas envoyé avec le formulaire. Un `<fieldset disabled>` parent a le même effet. |
+| `required` | Le formulaire n'est pas valide tant que l'interrupteur est sur « off ». Le message est en français si la page (ou un parent) a `lang="fr…"`, en anglais sinon. On peut le remplacer avec `setCustomValidity()`. |
+| `name` | Nom du champ dans le formulaire. |
+| `value` | Valeur envoyée quand l'interrupteur est sur « on » (`on` par défaut). Sur « off », rien n'est envoyé, comme pour une case à cocher. |
+| `orientation` | `horizontal` (défaut) ou `vertical`. |
+| `off-color` | Couleur de la piste à l'état off (toute couleur CSS valide). |
+| `on-color` | Couleur de la piste à l'état on. |
+| `aria-label`, `aria-labelledby`, `aria-describedby` | Libellé accessible quand il n'y a pas de `<label>`. |
+| `tabindex` | Posé à `0` automatiquement. Une valeur fournie par l'auteur est respectée. |
+
+Les couleurs invalides données en attribut sont ignorées : la couleur passe alors à la propriété CSS, ou à la valeur par défaut.
+
+## Propriétés et méthodes JavaScript
+
+| Membre | Description |
+|---|---|
+| `checked` | `boolean`, l'état courant (reflété sur l'attribut). |
+| `defaultChecked` | `boolean`, l'état restauré par `form.reset()`. |
+| `disabled`, `required`, `name`, `value`, `orientation` | Reflètent les attributs du même nom. |
+| `form`, `labels`, `validity`, `validationMessage`, `willValidate` | Comme pour un champ natif. |
+| `checkValidity()`, `reportValidity()`, `setCustomValidity(msg)` | Validation, comme pour un champ natif. |
+| `toggle(force?)` | Bascule l'état, ou le fixe si `force` est un booléen. Renvoie le nouvel état. |
+
+Comme pour les champs natifs, une modification par script (`checked = …`, `toggle()`) **ne déclenche pas** d'événement.
+
+## Événements
+
+| Événement | Quand |
+|---|---|
+| `input` | À chaque bascule par l'utilisateur (souris, toucher, clavier, clic sur le `<label>`). Il remonte le DOM (`bubbles`) et traverse les shadow roots (`composed`). |
+| `change` | Juste après `input`. Il remonte le DOM (`bubbles`). |
+| `click` | Le clavier (Espace, Entrée) passe aussi par un `click`, comme pour un bouton natif. |
+
+## Orientation : attribut ou CSS
+
+Deux façons de passer en vertical :
+
+```html
+<toggle-switch orientation="vertical"></toggle-switch>
+```
+
+```css
+.colonne-de-bits toggle-switch { --switch-vertical: 1; }   /* 0 = horizontal, 1 = vertical */
+```
+
+**L'attribut l'emporte toujours** sur la propriété CSS. On peut donc fixer une orientation par défaut en CSS, pour toute une zone ou selon une media query, puis la changer pour un seul élément avec `orientation="horizontal"` ou `orientation="vertical"`.
+
+`--switch-vertical` doit valoir exactement `0` ou `1`, car c'est un nombre utilisé dans des `calc()`. C'est ce qui permet à la bascule de fonctionner partout, sans *container style queries*.
+
+En vertical, **« on » = curseur en haut**, et la couleur « on » colore la piste.
+
+## Propriétés CSS personnalisées
+
+| Propriété | Défaut | Rôle |
+|---|---|---|
+| `--switch-off-color` | `#767676` (clair) / `#8e8e93` (sombre) | Piste à l'état off |
+| `--switch-on-color` | `#1a7f37` (clair) / `#2ea043` (sombre) | Piste à l'état on |
+| `--switch-thumb-color` | `#ffffff` | Curseur |
+| `--switch-thumb-shadow` | ombre légère | Ombre du curseur (`none` pour la retirer) |
+| `--switch-thumb-size` | `1.25em` | Diamètre du curseur |
+| `--switch-padding` | `0.1875em` | Marge entre le curseur et le bord de la piste |
+| `--switch-length` | `1.65 ×` la largeur | Longueur de la piste (grand côté) |
+| `--switch-focus-color` | `#0b57d0` / `#a8c7fa` | Anneau de focus |
+| `--switch-duration` | `180ms` | Durée de l'animation |
+| `--switch-vertical` | `0` | Orientation (voir plus haut) |
+
+Les tailles sont en `em` : l'interrupteur suit la taille de police de son parent (`font-size: 1.5rem` le grossit).
+
+**Priorité des couleurs :** attribut `off-color` / `on-color` > propriété CSS > défaut.
+
+```css
+.marque toggle-switch {
+  --switch-off-color: light-dark(#b3261e, #f2b8b5);
+  --switch-on-color: light-dark(#0b57d0, #a8c7fa);
+  --switch-thumb-color: light-dark(#fff, #1f2229);
+}
+```
+
+## Parts (`::part()`)
+
+| Part | Élément |
+|---|---|
+| `track` | La piste (le fond arrondi). |
+| `thumb` | Le curseur rond. |
+
+```css
+toggle-switch.carre::part(track) { border-radius: .3em; }
+toggle-switch.carre::part(thumb) { border-radius: .2em; }
+```
+
+Pour styler selon l'état, on peut utiliser l'attribut reflété, `toggle-switch[checked]::part(thumb)`, ou l'état personnalisé `toggle-switch:state(checked)` dans les navigateurs qui le prennent en charge.
+
+## Accessibilité
+
+- **Rôle et état** : `role="switch"` et `aria-checked` sont exposés via `ElementInternals`, sans attributs ajoutés au DOM. `aria-disabled` et `aria-required` suivent l'état.
+- **Libellé** : `<label for="id">` ou `<label>` englobant (grâce à `formAssociated`, cliquer sur le libellé bascule l'interrupteur), sinon `aria-label` / `aria-labelledby`.
+- **Clavier** : l'interrupteur est focusable avec Tab. **Espace** le bascule au relâchement de la touche, comme un bouton natif, sans faire défiler la page. **Entrée** le bascule aussi et n'envoie pas le formulaire.
+- **Focus visible** : un anneau autour de la piste, seulement en navigation clavier (`:focus-visible`).
+- **Mouvement réduit** : avec `prefers-reduced-motion: reduce`, il n'y a plus de transition.
+- **Thèmes clair et sombre** : les couleurs par défaut utilisent `light-dark()` et suivent le `color-scheme` de la page. Déclarez `:root { color-scheme: light dark; }` pour suivre `prefers-color-scheme`, ou `color-scheme: dark` pour forcer le sombre. Dans les navigateurs sans `light-dark()`, une media query `prefers-color-scheme` prend le relais. Contrastes des couleurs par défaut :
+  - thème clair : piste off 4,5:1, piste on 5,1:1, contre le curseur blanc comme contre un fond blanc ;
+  - thème sombre : piste off et piste on > 5:1 contre le fond, ≥ 3,2:1 contre le curseur.
+
+  Tout cela respecte le seuil WCAG de 3:1 pour les composants d'interface (critère 1.4.11).
+- **Contraste élevé** (Windows, `forced-colors`) : la piste et le curseur utilisent les couleurs système (`Canvas`, `CanvasText`, `Highlight`), pour que l'état reste lisible.
+- **Désactivé** : l'interrupteur devient semi-transparent, avec le curseur `not-allowed`.
+
+Si vous personnalisez les couleurs, vérifiez le contraste entre la piste et le curseur, et entre la piste et le fond de la page.
+
+## Formulaires
+
+L'élément est un *form-associated custom element* :
+
+- il est envoyé avec le formulaire (`name=value` quand il est sur « on », rien sur « off ») ;
+- `required` bloque l'envoi tant qu'il est sur « off » ;
+- `form.reset()` lui rend son état par défaut (l'attribut `checked` d'origine, ou `defaultChecked`) ;
+- `<fieldset disabled>` le désactive ;
+- l'état est restauré par le navigateur lors d'un retour arrière dans l'historique.
+
+## Compatibilité
+
+Le composant utilise des navigateurs récents : Custom Elements, Shadow DOM, `ElementInternals` avec réflexion ARIA, `adoptedStyleSheets`, `light-dark()`. Il fonctionne dans Chrome/Edge, Firefox et Safari dans leurs versions actuelles (2024 et après).
+
+## Fichiers
+
+- `toggle-switch.js` : le composant (module ES, autonome). C'est le seul fichier à copier dans un projet.
+- `demo.html` : démonstration de toutes les variantes (horizontal, vertical, couleurs, tailles, désactivé, formulaire, thèmes, journal des événements).
+- `index.html` : redirige vers la démo (pratique pour GitHub Pages).
+- `docs/apercu.jpg` : capture utilisée dans ce README.
+- `CHANGELOG.md` : historique des versions.
+- `package.json` : métadonnées (module ES, licence). Il est marqué `"private": true` pour éviter une publication npm accidentelle ; le nom `toggle-switch` est probablement déjà pris sur npm, choisissez un nom (ou un *scope*) libre avant de publier.
+
+## Développement
+
+Aucune étape de build. Pour lancer la démo en local :
+
+```sh
+python -m http.server 8000
+# ou : npx http-server -p 8000
+```
+
+puis ouvrez <http://localhost:8000/demo.html>.
+
+Pour publier la démo avec GitHub Pages : *Settings → Pages → Deploy from a branch*, branche `main`, dossier `/ (root)`.
+
+## Licence
+
+[MIT](LICENSE) © 2026 Chantraine.net
