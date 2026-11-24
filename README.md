@@ -23,7 +23,17 @@ Screen readers therefore announce "switch, on" rather than "checkbox, checked".
 
 ## Installation
 
-There is nothing to build. Copy `gc-toggle-switch.js` into your project and import it as an ES module:
+With npm and a bundler:
+
+```sh
+npm install gc-toggle-switch
+```
+
+```js
+import 'gc-toggle-switch';
+```
+
+Without a bundler, there is nothing to build. Copy `gc-toggle-switch.js` into your project and import it as an ES module:
 
 ```html
 <script type="module" src="./gc-toggle-switch.js"></script>
@@ -40,7 +50,7 @@ The `<gc-toggle-switch>` element is defined automatically, only once even if the
 The file is also available from the jsDelivr CDN. Pin a version (git tag) in production:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.4.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.4.1/gc-toggle-switch.js"></script>
 ```
 
 > ES modules do not load from `file://`. Serve the page over HTTP, for example with `python -m http.server` in this folder, then open `http://localhost:8000/demo.html`.
@@ -311,7 +321,7 @@ The component relies on modern browsers: Custom Elements, Shadow DOM, `ElementIn
 - `gc-toggle-switch.d.ts`, `custom-elements.json`, `vscode.html-custom-data.json`: types and editor metadata (optional).
 - `docs/preview.jpg`: screenshot used in the READMEs.
 - `README.md` (this document), `README.fr.md` (French), `CHANGELOG.md`.
-- `package.json`: metadata (ES module, licence). It is marked `"private": true` to prevent an accidental npm publish. The name `gc-toggle-switch` was free on npm on 2026-11-24; remove `"private"` to publish.
+- `package.json`: npm metadata (ES module, types, licence).
 
 ## Development
 

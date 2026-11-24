@@ -1,6 +1,6 @@
 {
   "name": "gc-toggle-switch",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Accessible toggle switch: a native, dependency-free, form-associated Custom Element.",
   "type": "module",
   "main": "gc-toggle-switch.js",
@@ -35,5 +35,12 @@
   ],
   "author": "Chantraine.net",
   "license": "MIT",
-  "private": true
+  "homepage": "https://slone.github.io/gc-toggle-switch/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slone/gc-toggle-switch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/slone/gc-toggle-switch/issues"
+  }
 }

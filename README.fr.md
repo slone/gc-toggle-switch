@@ -23,7 +23,17 @@ Les lecteurs d'écran annoncent donc « interrupteur, activé » et non « case 
 
 ## Installation
 
-Il n'y a rien à compiler. Copiez `gc-toggle-switch.js` dans votre projet et importez-le comme module ES :
+Avec npm et un bundler :
+
+```sh
+npm install gc-toggle-switch
+```
+
+```js
+import 'gc-toggle-switch';
+```
+
+Sans bundler, il n'y a rien à compiler. Copiez `gc-toggle-switch.js` dans votre projet et importez-le comme module ES :
 
 ```html
 <script type="module" src="./gc-toggle-switch.js"></script>
@@ -40,7 +50,7 @@ L'élément `<gc-toggle-switch>` est défini automatiquement, une seule fois mê
 Le fichier est aussi disponible par CDN via jsDelivr. En production, fixez une version (tag git) :
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.4.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.4.1/gc-toggle-switch.js"></script>
 ```
 
 > Un module ES ne se charge pas depuis `file://`. Servez la page en HTTP, par exemple avec `python -m http.server` dans ce dossier, puis ouvrez `http://localhost:8000/demo.html`.
@@ -311,7 +321,7 @@ Le composant utilise des navigateurs récents : Custom Elements, Shadow DOM, `El
 - `gc-toggle-switch.d.ts`, `custom-elements.json`, `vscode.html-custom-data.json` : types et métadonnées pour les éditeurs (facultatifs).
 - `docs/preview.jpg` : capture utilisée dans les README.
 - `README.md` (anglais), `README.fr.md` (ce document), `CHANGELOG.md`.
-- `package.json` : métadonnées (module ES, licence). Il est marqué `"private": true` pour éviter une publication npm accidentelle. Le nom `gc-toggle-switch` était libre sur npm au 24/11/2026 ; retirez `"private"` pour publier.
+- `package.json` : métadonnées npm (module ES, types, licence).
 
 ## Développement
 

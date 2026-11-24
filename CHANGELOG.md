@@ -2,6 +2,12 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.4.1] — 2026-11-24
+
+### Changed
+
+- The package can be published to npm: `private` removed, repository links added, npm installation documented. No change to the component.
+
 ## [1.4.0] — 2026-11-24
 
 ### Added
