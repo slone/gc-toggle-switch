@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "2.1.0",
+  "readme": "README.md",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "gc-toggle-switch.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "ToggleSwitch",
+          "tagName": "gc-toggle-switch",
+          "customElement": true,
+          "summary": "Accessible, form-associated toggle switch.",
+          "description": "An on/off switch, horizontal or vertical, usable with a pointer (click or drag) and the keyboard (Space, Enter).",
+          "superclass": { "name": "HTMLElement", "package": "global:" },
+          "attributes": [
+            { "name": "checked", "type": { "text": "boolean" }, "default": "false", "fieldName": "checked", "description": "The \"on\" state (reflected). Also sets the default state used by form.reset()." },
+            { "name": "disabled", "type": { "text": "boolean" }, "default": "false", "fieldName": "disabled", "description": "Disables the switch and excludes it from the form." },
+            { "name": "busy", "type": { "text": "boolean" }, "default": "false", "fieldName": "busy", "description": "Shows a spinner, exposes aria-busy and ignores user actions." },
+            { "name": "required", "type": { "text": "boolean" }, "default": "false", "fieldName": "required", "description": "The form is invalid while the switch is off." },
+            { "name": "name", "type": { "text": "string" }, "default": "\"\"", "fieldName": "name", "description": "Field name in the form." },
+            { "name": "value", "type": { "text": "string" }, "default": "\"on\"", "fieldName": "value", "description": "Value submitted when the switch is on." },
+            { "name": "orientation", "type": { "text": "'horizontal' | 'vertical'" }, "fieldName": "orientation", "description": "Orientation. Wins over --switch-vertical; horizontal when neither is set." },
+            { "name": "off-color", "type": { "text": "string" }, "description": "Track colour when off (any CSS colour). Wins over --switch-off-color." },
+            { "name": "on-color", "type": { "text": "string" }, "description": "Track colour when on (any CSS colour). Wins over --switch-on-color." },
+            { "name": "state-labels", "type": { "text": "boolean" }, "default": "false", "fieldName": "stateLabels", "description": "Shows I / O state indicators in the track." }
+          ],
+          "members": [
+            { "kind": "field", "name": "formAssociated", "static": true, "readonly": true, "type": { "text": "boolean" }, "default": "true" },
+            { "kind": "field", "name": "checked", "type": { "text": "boolean" }, "default": "false", "attribute": "checked", "reflects": true, "description": "Current state. Setting it fires no event." },
+            { "kind": "field", "name": "defaultChecked", "type": { "text": "boolean" }, "default": "false", "description": "State restored by form.reset()." },
+            { "kind": "field", "name": "disabled", "type": { "text": "boolean" }, "default": "false", "attribute": "disabled", "reflects": true },
+            { "kind": "field", "name": "busy", "type": { "text": "boolean" }, "default": "false", "attribute": "busy", "reflects": true },
+            { "kind": "field", "name": "required", "type": { "text": "boolean" }, "default": "false", "attribute": "required", "reflects": true },
+            { "kind": "field", "name": "name", "type": { "text": "string" }, "default": "\"\"", "attribute": "name", "reflects": true },
+            { "kind": "field", "name": "value", "type": { "text": "string" }, "default": "\"on\"", "attribute": "value", "reflects": true },
+            { "kind": "field", "name": "orientation", "type": { "text": "'horizontal' | 'vertical'" }, "default": "\"horizontal\"", "attribute": "orientation", "reflects": true, "description": "Orientation set by the attribute; an orientation set in CSS is not visible here." },
+            { "kind": "field", "name": "stateLabels", "type": { "text": "boolean" }, "default": "false", "attribute": "state-labels", "reflects": true },
+            { "kind": "field", "name": "type", "readonly": true, "type": { "text": "'gc-toggle-switch'" } },
+            { "kind": "field", "name": "form", "readonly": true, "type": { "text": "HTMLFormElement | null" } },
+            { "kind": "field", "name": "labels", "readonly": true, "type": { "text": "NodeList" } },
+            { "kind": "field", "name": "validity", "readonly": true, "type": { "text": "ValidityState" } },
+            { "kind": "field", "name": "validationMessage", "readonly": true, "type": { "text": "string" } },
+            { "kind": "field", "name": "willValidate", "readonly": true, "type": { "text": "boolean" } },
+            { "kind": "method", "name": "checkValidity", "return": { "type": { "text": "boolean" } } },
+            { "kind": "method", "name": "reportValidity", "return": { "type": { "text": "boolean" } } },
+            { "kind": "method", "name": "setCustomValidity", "parameters": [{ "name": "message", "type": { "text": "string" }, "description": "An empty string clears the custom error." }], "return": { "type": { "text": "void" } } },
+            { "kind": "method", "name": "toggle", "description": "Toggles the state, or sets it when force is a boolean. Fires no event.", "parameters": [{ "name": "force", "optional": true, "type": { "text": "boolean" } }], "return": { "type": { "text": "boolean" }, "description": "The new state." } }
+          ],
+          "events": [
+            { "name": "input", "type": { "text": "Event" }, "description": "The user toggled the switch. Bubbles and is composed." },
+            { "name": "change", "type": { "text": "Event" }, "description": "Fired right after input. Bubbles." }
+          ],
+          "slots": [
+            { "name": "on", "description": "Indicator shown when on (short text or icon)." },
+            { "name": "off", "description": "Indicator shown when off (short text or icon)." }
+          ],
+          "cssParts": [
+            { "name": "track", "description": "The track (rounded background)." },
+            { "name": "thumb", "description": "The round thumb." },
+            { "name": "on-label", "description": "The indicator shown when on." },
+            { "name": "off-label", "description": "The indicator shown when off." }
+          ],
+          "cssProperties": [
+            { "name": "--switch-off-color", "default": "light-dark(#767676, #8e8e93)", "description": "Track colour when off." },
+            { "name": "--switch-on-color", "default": "light-dark(#1a7f37, #2ea043)", "description": "Track colour when on." },
+            { "name": "--switch-thumb-color", "default": "#ffffff", "description": "Thumb colour." },
+            { "name": "--switch-thumb-shadow", "default": "0 1px 3px rgb(0 0 0 / 0.35), 0 0 0 0.5px rgb(0 0 0 / 0.08)", "description": "Thumb shadow." },
+            { "name": "--switch-thumb-size", "default": "1.25em", "description": "Thumb diameter." },
+            { "name": "--switch-padding", "default": "0.1875em", "description": "Gap between the thumb and the track edge." },
+            { "name": "--switch-length", "default": "1.65 × the track width", "description": "Track length (long side)." },
+            { "name": "--switch-focus-color", "default": "light-dark(#0b57d0, #a8c7fa)", "description": "Focus ring colour." },
+            { "name": "--switch-label-color", "default": "#ffffff", "description": "State indicator colour." },
+            { "name": "--switch-halo-color", "default": "light-dark(rgb(0 0 0 / 0.1), rgb(255 255 255 / 0.18))", "description": "Halo around the thumb on hover and press." },
+            { "name": "--switch-duration", "default": "180ms", "description": "Animation duration." },
+            { "name": "--switch-vertical", "default": "0", "description": "0 = horizontal, 1 = vertical. The orientation attribute wins." }
+          ],
+          "cssStates": [
+            { "name": "checked", "description": "The switch is on." }
+          ]
+        }
+      ],
+      "exports": [
+        { "kind": "js", "name": "ToggleSwitch", "declaration": { "name": "ToggleSwitch", "module": "gc-toggle-switch.js" } },
+        { "kind": "custom-element-definition", "name": "gc-toggle-switch", "declaration": { "name": "ToggleSwitch", "module": "gc-toggle-switch.js" } }
+      ]
+    }
+  ]
+}

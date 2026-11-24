@@ -2,6 +2,14 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.0] — 2026-11-24
+
+### Added
+
+- TypeScript definitions (`gc-toggle-switch.d.ts`).
+- Custom Elements Manifest (`custom-elements.json`).
+- VS Code HTML completion data (`vscode.html-custom-data.json`).
+
 ## [1.2.0] — 2026-11-24
 
 ### Added

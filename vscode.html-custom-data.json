@@ -1,0 +1,70 @@
+{
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "gc-toggle-switch",
+      "description": "An on/off switch, horizontal or vertical, usable with a pointer (click or drag) and the keyboard (Space, Enter).",
+      "attributes": [
+        {
+          "name": "checked",
+          "description": "The \"on\" state (reflected). Also sets the default state used by form.reset().",
+          "valueSet": "v"
+        },
+        {
+          "name": "disabled",
+          "description": "Disables the switch and excludes it from the form.",
+          "valueSet": "v"
+        },
+        {
+          "name": "busy",
+          "description": "Shows a spinner, exposes aria-busy and ignores user actions.",
+          "valueSet": "v"
+        },
+        {
+          "name": "required",
+          "description": "The form is invalid while the switch is off.",
+          "valueSet": "v"
+        },
+        {
+          "name": "name",
+          "description": "Field name in the form."
+        },
+        {
+          "name": "value",
+          "description": "Value submitted when the switch is on."
+        },
+        {
+          "name": "orientation",
+          "description": "Orientation. Wins over --switch-vertical; horizontal when neither is set.",
+          "values": [
+            {
+              "name": "horizontal"
+            },
+            {
+              "name": "vertical"
+            }
+          ]
+        },
+        {
+          "name": "off-color",
+          "description": "Track colour when off (any CSS colour). Wins over --switch-off-color."
+        },
+        {
+          "name": "on-color",
+          "description": "Track colour when on (any CSS colour). Wins over --switch-on-color."
+        },
+        {
+          "name": "state-labels",
+          "description": "Shows I / O state indicators in the track.",
+          "valueSet": "v"
+        }
+      ],
+      "references": [
+        {
+          "name": "Documentation",
+          "url": "https://github.com/slone/gc-toggle-switch#readme"
+        }
+      ]
+    }
+  ]
+}

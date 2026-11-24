@@ -40,7 +40,7 @@ The `<gc-toggle-switch>` element is defined automatically, only once even if the
 The file is also available from the jsDelivr CDN. Pin a version (git tag) in production:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.2.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.3.0/gc-toggle-switch.js"></script>
 ```
 
 > ES modules do not load from `file://`. Serve the page over HTTP, for example with `python -m http.server` in this folder, then open `http://localhost:8000/demo.html`.
@@ -282,6 +282,16 @@ The element is a *form-associated custom element*:
 - `<fieldset disabled>` disables it;
 - the browser restores its state when navigating back in history.
 
+## TypeScript and editor support
+
+- **TypeScript**: `gc-toggle-switch.d.ts` sits next to the module and is picked up when you import it. `document.querySelector('gc-toggle-switch')` is then typed as `ToggleSwitch | null`.
+- **Custom Elements Manifest**: `custom-elements.json` describes attributes, properties, events, slots, parts and CSS properties for tools that read it (Storybook, documentation generators, some IDEs).
+- **VS Code**: VS Code does not read the manifest by itself. For tag and attribute completion in HTML, copy `vscode.html-custom-data.json` into your project and reference it in `.vscode/settings.json`:
+
+```json
+{ "html.customData": ["./vscode.html-custom-data.json"] }
+```
+
 ## Browser support
 
 The component relies on modern browsers: Custom Elements, Shadow DOM, `ElementInternals` with ARIA reflection, `adoptedStyleSheets`, `light-dark()`, `:dir()`, Pointer Events. It works in current versions of Chrome/Edge, Firefox and Safari (2024 and later).
@@ -291,6 +301,7 @@ The component relies on modern browsers: Custom Elements, Shadow DOM, `ElementIn
 - `gc-toggle-switch.js`: the component (standalone ES module). It is the only file to copy into a project.
 - `demo.html`: demo of every variant, in English and French (language switcher, or `?lang=en` / `?lang=fr` in the URL).
 - `index.html`: redirects to the demo (handy for GitHub Pages).
+- `gc-toggle-switch.d.ts`, `custom-elements.json`, `vscode.html-custom-data.json`: types and editor metadata (optional).
 - `docs/preview.jpg`: screenshot used in the READMEs.
 - `README.md` (this document), `README.fr.md` (French), `CHANGELOG.md`.
 - `package.json`: metadata (ES module, licence). It is marked `"private": true` to prevent an accidental npm publish. The name `gc-toggle-switch` was free on npm on 2026-11-24; remove `"private"` to publish.
