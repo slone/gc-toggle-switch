@@ -4,7 +4,9 @@ Interrupteur à bascule réutilisable : un Custom Element natif (le préfixe `gc
 
 ![Aperçu de la page de démonstration : interrupteurs horizontaux, verticaux, colorés et de différentes tailles](docs/apercu.jpg)
 
-**Démonstration :** [`demo.html`](demo.html). Si GitHub Pages est activé sur ce dépôt, elle est en ligne à `https://<utilisateur>.github.io/<dépôt>/`.
+**Démonstration en ligne :** <https://slone.github.io/gc-toggle-switch/> (source : [`demo.html`](demo.html)).
+
+**Dépôt :** <https://github.com/slone/gc-toggle-switch>
 
 ## Le nom de ce contrôle
 
@@ -33,10 +35,10 @@ import { ToggleSwitch } from './gc-toggle-switch.js';
 
 L'élément `<gc-toggle-switch>` est défini automatiquement, une seule fois même si le fichier est importé plusieurs fois.
 
-Une fois le dépôt public sur GitHub, le fichier est aussi disponible par CDN via jsDelivr. Remplacez `<utilisateur>` et `<dépôt>`, et fixez une version (tag git) en production :
+Le fichier est aussi disponible par CDN via jsDelivr. En production, fixez une version (tag git) :
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/<utilisateur>/<dépôt>@1.0.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.1.0/gc-toggle-switch.js"></script>
 ```
 
 > Un module ES ne se charge pas depuis `file://`. Servez la page en HTTP, par exemple avec `python -m http.server` dans ce dossier, puis ouvrez `http://localhost:8000/demo.html`.
