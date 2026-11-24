@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>&lt;gc-toggle-switch&gt; — démonstration</title>
+  <title>&lt;gc-toggle-switch&gt; — demo</title>
   <script type="module" src="./gc-toggle-switch.js"></script>
   <style>
     :root {
@@ -21,7 +21,7 @@
     :root[data-theme="dark"] { color-scheme: dark; }
     body { margin: 0; background: var(--bg); color: var(--fg); }
     main { max-width: 60rem; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
-    header { display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline; justify-content: space-between; }
+    header { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; }
     h1 { font-size: 1.6rem; margin: 0; }
     h2 { font-size: 1.15rem; margin: 0 0 .75rem; }
     p.lead { color: var(--muted); margin: .25rem 0 1.5rem; }
@@ -38,10 +38,12 @@
     button:focus-visible { outline: 2px solid light-dark(#0b57d0, #a8c7fa); outline-offset: 2px; }
     pre { background: var(--code); padding: .75rem; border-radius: .5rem; overflow: auto; margin: .75rem 0 0; min-height: 1.5em; }
     #log { max-height: 10rem; }
-    .theme { display: flex; gap: .4rem; align-items: center; }
-    .theme button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .group { display: flex; gap: .4rem; align-items: center; }
+    .group button { padding: .3rem .7rem; }
+    .group button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 
-    /* Variantes pilotées par CSS */
+    /* CSS-driven variants */
     .vertical-by-css gc-toggle-switch { --switch-vertical: 1; }
     .big { font-size: 1.75rem; }
     .compact { --switch-thumb-size: 1em; --switch-padding: 2px; --switch-length: 2.25em; }
@@ -52,9 +54,9 @@
     }
     .square::part(track) { border-radius: .3em; }
     .square::part(thumb) { border-radius: .2em; }
-    .lettres { --switch-length: 3.2em; }
+    .words { --switch-length: 3.2em; }
 
-    /* Réserve la place avant le chargement du module (voir README). */
+    /* Reserves the space before the module loads (see README). */
     gc-toggle-switch:not(:defined) {
       --_v0: var(--switch-vertical, 0);
       --_s0: calc(var(--switch-thumb-size, 1.25em) + 2 * var(--switch-padding, 0.1875em));
@@ -76,37 +78,44 @@
 <main>
   <header>
     <h1><code>&lt;gc-toggle-switch&gt;</code></h1>
-    <div class="theme" role="group" aria-label="Thème de la page">
-      <span>Thème :</span>
-      <button type="button" data-set-theme="" aria-pressed="true">Système</button>
-      <button type="button" data-set-theme="light" aria-pressed="false">Clair</button>
-      <button type="button" data-set-theme="dark" aria-pressed="false">Sombre</button>
+    <div class="toolbar">
+      <div class="group" role="group" data-i18n-label="langGroup" aria-label="Language">
+        <button type="button" data-set-lang="en" lang="en">English</button>
+        <button type="button" data-set-lang="fr" lang="fr">Français</button>
+      </div>
+      <div class="group" role="group" data-i18n-label="themeGroup" aria-label="Page theme">
+        <span data-i18n="theme">Theme:</span>
+        <button type="button" data-set-theme="" aria-pressed="true" data-i18n="themeSystem">System</button>
+        <button type="button" data-set-theme="light" aria-pressed="false" data-i18n="themeLight">Light</button>
+        <button type="button" data-set-theme="dark" aria-pressed="false" data-i18n="themeDark">Dark</button>
+      </div>
     </div>
   </header>
-  <p class="lead">Interrupteur à bascule (« toggle switch ») : Custom Element natif, accessible, associé aux formulaires.</p>
+  <p class="lead" data-i18n="lead">An accessible, form-associated toggle switch built as a native Custom Element.</p>
 
   <section>
-    <h2>Horizontal (par défaut)</h2>
+    <h2 data-i18n="hTitle">Horizontal (default)</h2>
     <div class="row">
       <div class="item"><gc-toggle-switch id="h1"></gc-toggle-switch><label for="h1">Wi-Fi</label></div>
-      <div class="item"><gc-toggle-switch id="h2" checked></gc-toggle-switch><label for="h2">Bluetooth (activé au départ)</label></div>
-      <div class="item"><gc-toggle-switch aria-label="Mode avion"></gc-toggle-switch><span aria-hidden="true">Mode avion (<code>aria-label</code>)</span></div>
-      <label class="item">Libellé englobant <gc-toggle-switch></gc-toggle-switch></label>
+      <div class="item"><gc-toggle-switch id="h2" checked></gc-toggle-switch><label for="h2" data-i18n="bluetooth">Bluetooth (on at start)</label></div>
+      <div class="item"><gc-toggle-switch id="h3" data-i18n-label="airplane" aria-label="Airplane mode"></gc-toggle-switch><span aria-hidden="true" data-i18n="airplaneText">Airplane mode (<code>aria-label</code>)</span></div>
+      <label class="item"><span data-i18n="wrapping">Wrapping label</span> <gc-toggle-switch></gc-toggle-switch></label>
     </div>
+    <p class="note" data-i18n="dragNote">Click, press Space or Enter, or drag the thumb.</p>
   </section>
 
   <section>
-    <h2>Vertical (« on » = curseur en haut)</h2>
+    <h2 data-i18n="vTitle">Vertical ("on" = thumb at the top)</h2>
     <div class="row">
       <div class="item col"><gc-toggle-switch id="v1" orientation="vertical"></gc-toggle-switch><label for="v1"><code>orientation="vertical"</code></label></div>
-      <div class="item col"><gc-toggle-switch id="v2" orientation="vertical" checked></gc-toggle-switch><label for="v2">idem, activé</label></div>
+      <div class="item col"><gc-toggle-switch id="v2" orientation="vertical" checked></gc-toggle-switch><label for="v2" data-i18n="sameOn">same, on</label></div>
       <div class="vertical-by-css row">
         <div class="item col"><gc-toggle-switch id="v3"></gc-toggle-switch><label for="v3"><code>--switch-vertical: 1</code></label></div>
-        <div class="item col"><gc-toggle-switch id="v4" orientation="horizontal"></gc-toggle-switch><label for="v4">CSS vertical, mais<br><code>orientation="horizontal"</code> l'emporte</label></div>
+        <div class="item col"><gc-toggle-switch id="v4" orientation="horizontal"></gc-toggle-switch><label for="v4" data-i18n="attrWins">Vertical by CSS, but<br><code>orientation="horizontal"</code> wins</label></div>
       </div>
     </div>
-    <p class="note">Un rang de bits façon convertisseur binaire :</p>
-    <div class="row" style="gap:.6rem" role="group" aria-label="Octet">
+    <p class="note" data-i18n="byteNote">A row of bits, binary-converter style:</p>
+    <div class="row" style="gap:.6rem" role="group" id="byteGroup" data-i18n-label="byte" aria-label="Byte">
       <gc-toggle-switch orientation="vertical" aria-label="Bit 7"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
       <gc-toggle-switch orientation="vertical" aria-label="Bit 6" checked><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
       <gc-toggle-switch orientation="vertical" aria-label="Bit 5"><span slot="on">1</span><span slot="off">0</span></gc-toggle-switch>
@@ -120,81 +129,90 @@
   </section>
 
   <section>
-    <h2>Couleurs, tailles et parts</h2>
+    <h2 data-i18n="cTitle">Colours, sizes and parts</h2>
     <div class="row">
-      <div class="item"><gc-toggle-switch id="c1" off-color="#b3261e" on-color="#0b57d0"></gc-toggle-switch><label for="c1">Attributs <code>off-color</code> / <code>on-color</code></label></div>
-      <div class="item brand"><gc-toggle-switch id="c2" checked></gc-toggle-switch><label for="c2">Propriétés CSS (adaptées au thème)</label></div>
-      <div class="item"><gc-toggle-switch id="c3" off-color="rebeccapurple"></gc-toggle-switch><label for="c3">Seulement <code>off-color</code></label></div>
-      <div class="item big"><gc-toggle-switch id="c4" checked></gc-toggle-switch><label for="c4">Grand (font-size)</label></div>
-      <div class="item compact"><gc-toggle-switch id="c5"></gc-toggle-switch><label for="c5">Compact</label></div>
-      <div class="item"><gc-toggle-switch id="c6" class="square" checked></gc-toggle-switch><label for="c6"><code>::part()</code> carré</label></div>
+      <div class="item"><gc-toggle-switch id="c1" off-color="#b3261e" on-color="#0b57d0"></gc-toggle-switch><label for="c1" data-i18n="attrColors"><code>off-color</code> / <code>on-color</code> attributes</label></div>
+      <div class="item brand"><gc-toggle-switch id="c2" checked></gc-toggle-switch><label for="c2" data-i18n="cssColors">CSS properties (theme-aware)</label></div>
+      <div class="item"><gc-toggle-switch id="c3" off-color="rebeccapurple"></gc-toggle-switch><label for="c3" data-i18n="offOnly"><code>off-color</code> only</label></div>
+      <div class="item big"><gc-toggle-switch id="c4" checked></gc-toggle-switch><label for="c4" data-i18n="big">Large (font-size)</label></div>
+      <div class="item compact"><gc-toggle-switch id="c5"></gc-toggle-switch><label for="c5" data-i18n="compact">Compact (24 px hit area)</label></div>
+      <div class="item"><gc-toggle-switch id="c6" class="square" checked></gc-toggle-switch><label for="c6" data-i18n="square">square <code>::part()</code></label></div>
     </div>
   </section>
 
   <section>
-    <h2>Indicateurs d'état</h2>
+    <h2 data-i18n="sTitle">State indicators</h2>
     <div class="row">
-      <div class="item"><gc-toggle-switch id="s1" state-labels></gc-toggle-switch><label for="s1"><code>state-labels</code> (I / O)</label></div>
-      <div class="item"><gc-toggle-switch id="s2" state-labels checked></gc-toggle-switch><label for="s2">idem, activé</label></div>
-      <div class="item"><gc-toggle-switch id="s3" state-labels orientation="vertical"></gc-toggle-switch><label for="s3">Vertical</label></div>
-      <div class="item lettres"><gc-toggle-switch id="s4" checked><span slot="on">ON</span><span slot="off">OFF</span></gc-toggle-switch><label for="s4">Slots <code>on</code> / <code>off</code></label></div>
-      <div class="item"><gc-toggle-switch id="s5" off-color="#b3261e" state-labels></gc-toggle-switch><label for="s5">Avec couleurs personnalisées</label></div>
+      <div class="item"><gc-toggle-switch id="s1" state-labels></gc-toggle-switch><label for="s1" data-i18n="s1"><code>state-labels</code> (I / O)</label></div>
+      <div class="item"><gc-toggle-switch id="s2" state-labels checked></gc-toggle-switch><label for="s2" data-i18n="sameOn">same, on</label></div>
+      <div class="item"><gc-toggle-switch id="s3" state-labels orientation="vertical"></gc-toggle-switch><label for="s3" data-i18n="vertical">Vertical</label></div>
+      <div class="item words"><gc-toggle-switch id="s4" checked><span slot="on">ON</span><span slot="off">OFF</span></gc-toggle-switch><label for="s4" data-i18n="slots"><code>on</code> / <code>off</code> slots</label></div>
+      <div class="item"><gc-toggle-switch id="s5" off-color="#b3261e" state-labels></gc-toggle-switch><label for="s5" data-i18n="customColors">With custom colours</label></div>
     </div>
-    <p class="note">Les indicateurs ne dépendent pas de la couleur : utiles aux personnes daltoniennes ou malvoyantes.</p>
+    <p class="note" data-i18n="sNote">Indicators do not rely on colour: helpful for colour-blind or low-vision users.</p>
   </section>
 
   <section>
-    <h2>Droite à gauche (<code>dir="rtl"</code>)</h2>
+    <h2 data-i18n="rTitle">Right-to-left (<code>dir="rtl"</code>)</h2>
     <div class="row" dir="rtl" lang="ar">
       <div class="item"><gc-toggle-switch id="r1"></gc-toggle-switch><label for="r1">واي فاي</label></div>
       <div class="item"><gc-toggle-switch id="r2" checked state-labels></gc-toggle-switch><label for="r2">بلوتوث</label></div>
       <div class="item"><gc-toggle-switch id="r3" orientation="vertical" checked></gc-toggle-switch><label for="r3">عمودي</label></div>
     </div>
-    <p class="note">En RTL, « on » place le curseur à gauche (fin de ligne).</p>
+    <p class="note" data-i18n="rNote">In RTL, "on" puts the thumb on the left (line end), and dragging follows that direction.</p>
   </section>
 
   <section>
-    <h2>Annuler une bascule (<code>preventDefault()</code>)</h2>
+    <h2 data-i18n="bTitle">Busy (async action)</h2>
     <div class="row">
-      <div class="item"><gc-toggle-switch id="lock"></gc-toggle-switch><label for="lock">Autoriser la modification</label></div>
-      <div class="item"><gc-toggle-switch id="guarded" checked></gc-toggle-switch><label for="guarded">Sauvegarde automatique (protégée)</label></div>
+      <div class="item"><gc-toggle-switch id="b1"></gc-toggle-switch><label for="b1" data-i18n="b1">Cloud sync (simulated server, 1.5 s)</label></div>
+      <div class="item"><gc-toggle-switch id="b2"></gc-toggle-switch><label for="b2" data-i18n="b2">Fails and reverts</label></div>
     </div>
-    <p class="note" id="guardMsg" aria-live="polite">Tant que « Autoriser la modification » est éteint, un écouteur <code>click</code> appelle <code>preventDefault()</code> : l'interrupteur ne bascule pas et aucun <code>change</code> n'est émis.</p>
+    <p class="note" id="busyMsg" aria-live="polite" data-i18n="bNote">While <code>busy</code> is set, a spinner appears in the thumb and clicks are ignored.</p>
   </section>
 
   <section>
-    <h2>Désactivé</h2>
+    <h2 data-i18n="pTitle">Cancelling a toggle (<code>preventDefault()</code>)</h2>
     <div class="row">
-      <div class="item"><gc-toggle-switch id="d1" disabled></gc-toggle-switch><label for="d1">Off désactivé</label></div>
-      <div class="item"><gc-toggle-switch id="d2" disabled checked></gc-toggle-switch><label for="d2">On désactivé</label></div>
+      <div class="item"><gc-toggle-switch id="lock"></gc-toggle-switch><label for="lock" data-i18n="lock">Allow changes</label></div>
+      <div class="item"><gc-toggle-switch id="guarded" checked></gc-toggle-switch><label for="guarded" data-i18n="guarded">Auto-save (protected)</label></div>
+    </div>
+    <p class="note" id="guardMsg" aria-live="polite" data-i18n="pNote">While "Allow changes" is off, a <code>click</code> listener calls <code>preventDefault()</code>: the switch does not toggle and no <code>change</code> is fired.</p>
+  </section>
+
+  <section>
+    <h2 data-i18n="dTitle">Disabled</h2>
+    <div class="row">
+      <div class="item"><gc-toggle-switch id="d1" disabled></gc-toggle-switch><label for="d1" data-i18n="d1">Disabled, off</label></div>
+      <div class="item"><gc-toggle-switch id="d2" disabled checked></gc-toggle-switch><label for="d2" data-i18n="d2">Disabled, on</label></div>
       <fieldset id="fs" disabled>
-        <legend>Fieldset désactivé</legend>
-        <div class="item"><gc-toggle-switch id="d3" checked></gc-toggle-switch><label for="d3">Hérite de <code>&lt;fieldset disabled&gt;</code></label></div>
+        <legend data-i18n="fsLegend">Disabled fieldset</legend>
+        <div class="item"><gc-toggle-switch id="d3" checked></gc-toggle-switch><label for="d3" data-i18n="d3">Inherits <code>&lt;fieldset disabled&gt;</code></label></div>
       </fieldset>
-      <div class="item"><gc-toggle-switch id="fsToggle" checked></gc-toggle-switch><label for="fsToggle">Fieldset désactivé</label></div>
+      <div class="item"><gc-toggle-switch id="fsToggle" checked></gc-toggle-switch><label for="fsToggle" data-i18n="fsToggle">Fieldset disabled</label></div>
     </div>
   </section>
 
   <section>
-    <h2>Dans un formulaire</h2>
+    <h2 data-i18n="fTitle">In a form</h2>
     <form id="form">
       <div class="grid">
-        <gc-toggle-switch id="f1" name="newsletter" checked></gc-toggle-switch><label for="f1">Newsletter (<code>name="newsletter"</code>, valeur par défaut <code>on</code>)</label>
-        <gc-toggle-switch id="f2" name="theme" value="sombre"></gc-toggle-switch><label for="f2">Thème sombre (<code>value="sombre"</code>)</label>
-        <gc-toggle-switch id="f3" name="cgu" value="ok" required></gc-toggle-switch><label for="f3">J'accepte les conditions (<code>required</code>)</label>
-        <gc-toggle-switch id="f4" name="vertical" orientation="vertical" checked></gc-toggle-switch><label for="f4">Vertical dans le formulaire</label>
+        <gc-toggle-switch id="f1" name="newsletter" checked></gc-toggle-switch><label for="f1" data-i18n="f1">Newsletter (<code>name="newsletter"</code>, default value <code>on</code>)</label>
+        <gc-toggle-switch id="f2" name="theme" value="dark"></gc-toggle-switch><label for="f2" data-i18n="f2">Dark theme (<code>value="dark"</code>)</label>
+        <gc-toggle-switch id="f3" name="terms" value="accepted" required></gc-toggle-switch><label for="f3" data-i18n="f3">I accept the terms (<code>required</code>)</label>
+        <gc-toggle-switch id="f4" name="vertical" orientation="vertical" checked></gc-toggle-switch><label for="f4" data-i18n="f4">Vertical in the form</label>
       </div>
       <p class="row" style="gap:.6rem">
-        <button type="submit">Envoyer</button>
-        <button type="reset">Réinitialiser</button>
+        <button type="submit" data-i18n="submit">Submit</button>
+        <button type="reset" data-i18n="reset">Reset</button>
       </p>
     </form>
-    <p class="note">Données envoyées (FormData) :</p>
+    <p class="note" data-i18n="sent">Submitted data (FormData):</p>
     <pre id="formOut">—</pre>
   </section>
 
   <section>
-    <h2>Journal des événements</h2>
+    <h2 data-i18n="logTitle">Event log</h2>
     <pre id="log" aria-live="off"></pre>
   </section>
 </main>
@@ -202,18 +220,115 @@
 <script type="module">
   import './gc-toggle-switch.js';
 
-  // Thème
+  // ---- Translations --------------------------------------------------------
+  const I18N = {
+    en: {
+      title: '<gc-toggle-switch> — demo',
+      langGroup: 'Language', themeGroup: 'Page theme',
+      theme: 'Theme:', themeSystem: 'System', themeLight: 'Light', themeDark: 'Dark',
+      lead: 'An accessible, form-associated toggle switch built as a native Custom Element.',
+      hTitle: 'Horizontal (default)', bluetooth: 'Bluetooth (on at start)',
+      airplane: 'Airplane mode', airplaneText: 'Airplane mode (<code>aria-label</code>)',
+      wrapping: 'Wrapping label', dragNote: 'Click, press Space or Enter, or drag the thumb.',
+      vTitle: 'Vertical ("on" = thumb at the top)', sameOn: 'same, on',
+      attrWins: 'Vertical by CSS, but<br><code>orientation="horizontal"</code> wins',
+      byteNote: 'A row of bits, binary-converter style:', byte: 'Byte',
+      cTitle: 'Colours, sizes and parts',
+      attrColors: '<code>off-color</code> / <code>on-color</code> attributes',
+      cssColors: 'CSS properties (theme-aware)', offOnly: '<code>off-color</code> only',
+      big: 'Large (font-size)', compact: 'Compact (24 px hit area)', square: 'square <code>::part()</code>',
+      sTitle: 'State indicators', s1: '<code>state-labels</code> (I / O)', vertical: 'Vertical',
+      slots: '<code>on</code> / <code>off</code> slots', customColors: 'With custom colours',
+      sNote: 'Indicators do not rely on colour: helpful for colour-blind or low-vision users.',
+      rTitle: 'Right-to-left (<code>dir="rtl"</code>)',
+      rNote: 'In RTL, "on" puts the thumb on the left (line end), and dragging follows that direction.',
+      bTitle: 'Busy (async action)', b1: 'Cloud sync (simulated server, 1.5 s)', b2: 'Fails and reverts',
+      bNote: 'While <code>busy</code> is set, a spinner appears in the thumb and clicks are ignored.',
+      busySaving: 'Saving…', busySaved: 'Saved.', busyFailed: 'The server refused the change: the switch went back to its previous state.',
+      pTitle: 'Cancelling a toggle (<code>preventDefault()</code>)', lock: 'Allow changes', guarded: 'Auto-save (protected)',
+      pNote: 'While "Allow changes" is off, a <code>click</code> listener calls <code>preventDefault()</code>: the switch does not toggle and no <code>change</code> is fired.',
+      refused: 'Change refused: turn on "Allow changes" first.', allowed: 'Change allowed.',
+      dTitle: 'Disabled', d1: 'Disabled, off', d2: 'Disabled, on', fsLegend: 'Disabled fieldset',
+      d3: 'Inherits <code>&lt;fieldset disabled&gt;</code>', fsToggle: 'Fieldset disabled',
+      fTitle: 'In a form',
+      f1: 'Newsletter (<code>name="newsletter"</code>, default value <code>on</code>)',
+      f2: 'Dark theme (<code>value="dark"</code>)', f3: 'I accept the terms (<code>required</code>)',
+      f4: 'Vertical in the form', submit: 'Submit', reset: 'Reset', sent: 'Submitted data (FormData):',
+      noData: '(no data)', wasReset: '— (form reset)', logTitle: 'Event log',
+    },
+    fr: {
+      title: '<gc-toggle-switch> — démonstration',
+      langGroup: 'Langue', themeGroup: 'Thème de la page',
+      theme: 'Thème :', themeSystem: 'Système', themeLight: 'Clair', themeDark: 'Sombre',
+      lead: 'Interrupteur à bascule (« toggle switch ») : Custom Element natif, accessible, associé aux formulaires.',
+      hTitle: 'Horizontal (par défaut)', bluetooth: 'Bluetooth (activé au départ)',
+      airplane: 'Mode avion', airplaneText: 'Mode avion (<code>aria-label</code>)',
+      wrapping: 'Libellé englobant', dragNote: 'Cliquez, appuyez sur Espace ou Entrée, ou faites glisser le curseur.',
+      vTitle: 'Vertical (« on » = curseur en haut)', sameOn: 'idem, activé',
+      attrWins: 'CSS vertical, mais<br><code>orientation="horizontal"</code> l\'emporte',
+      byteNote: 'Un rang de bits façon convertisseur binaire :', byte: 'Octet',
+      cTitle: 'Couleurs, tailles et parts',
+      attrColors: 'Attributs <code>off-color</code> / <code>on-color</code>',
+      cssColors: 'Propriétés CSS (adaptées au thème)', offOnly: 'Seulement <code>off-color</code>',
+      big: 'Grand (font-size)', compact: 'Compact (zone de clic de 24 px)', square: '<code>::part()</code> carré',
+      sTitle: 'Indicateurs d\'état', s1: '<code>state-labels</code> (I / O)', vertical: 'Vertical',
+      slots: 'Slots <code>on</code> / <code>off</code>', customColors: 'Avec couleurs personnalisées',
+      sNote: 'Les indicateurs ne dépendent pas de la couleur : utiles aux personnes daltoniennes ou malvoyantes.',
+      rTitle: 'Droite à gauche (<code>dir="rtl"</code>)',
+      rNote: 'En RTL, « on » place le curseur à gauche (fin de ligne), et le glisser suit ce sens.',
+      bTitle: 'Occupé (action asynchrone)', b1: 'Synchronisation (serveur simulé, 1,5 s)', b2: 'Échoue et revient en arrière',
+      bNote: 'Tant que <code>busy</code> est présent, un indicateur tourne dans le curseur et les clics sont ignorés.',
+      busySaving: 'Enregistrement…', busySaved: 'Enregistré.', busyFailed: 'Le serveur a refusé : l\'interrupteur est revenu à son état précédent.',
+      pTitle: 'Annuler une bascule (<code>preventDefault()</code>)', lock: 'Autoriser la modification', guarded: 'Sauvegarde automatique (protégée)',
+      pNote: 'Tant que « Autoriser la modification » est éteint, un écouteur <code>click</code> appelle <code>preventDefault()</code> : l\'interrupteur ne bascule pas et aucun <code>change</code> n\'est émis.',
+      refused: 'Modification refusée : activez d\'abord « Autoriser la modification ».', allowed: 'Modification autorisée.',
+      dTitle: 'Désactivé', d1: 'Off désactivé', d2: 'On désactivé', fsLegend: 'Fieldset désactivé',
+      d3: 'Hérite de <code>&lt;fieldset disabled&gt;</code>', fsToggle: 'Fieldset désactivé',
+      fTitle: 'Dans un formulaire',
+      f1: 'Newsletter (<code>name="newsletter"</code>, valeur par défaut <code>on</code>)',
+      f2: 'Thème sombre (<code>value="dark"</code>)', f3: 'J\'accepte les conditions (<code>required</code>)',
+      f4: 'Vertical dans le formulaire', submit: 'Envoyer', reset: 'Réinitialiser', sent: 'Données envoyées (FormData) :',
+      noData: '(aucune donnée)', wasReset: '— (formulaire réinitialisé)', logTitle: 'Journal des événements',
+    },
+  };
+
+  let lang = 'en';
+  const t = (key) => I18N[lang][key] ?? I18N.en[key] ?? key;
+
+  function readLang() {
+    const fromUrl = new URLSearchParams(location.search).get('lang');
+    if (fromUrl in I18N) return fromUrl;
+    try { const saved = localStorage.getItem('gc-toggle-switch-demo-lang'); if (saved in I18N) return saved; } catch {}
+    return (navigator.language || '').toLowerCase().startsWith('fr') ? 'fr' : 'en';
+  }
+
+  function applyLang(next) {
+    lang = next;
+    document.documentElement.lang = lang; // also switches the "required" validation message
+    document.title = t('title');
+    // Translations are static strings from this file (trusted), some with <code> markup.
+    for (const el of document.querySelectorAll('[data-i18n]')) el.innerHTML = t(el.dataset.i18n);
+    for (const el of document.querySelectorAll('[data-i18n-label]')) el.setAttribute('aria-label', t(el.dataset.i18nLabel));
+    for (const b of document.querySelectorAll('[data-set-lang]')) b.setAttribute('aria-pressed', String(b.dataset.setLang === lang));
+    try { localStorage.setItem('gc-toggle-switch-demo-lang', lang); } catch {}
+  }
+  for (const b of document.querySelectorAll('[data-set-lang]')) {
+    b.addEventListener('click', () => applyLang(b.dataset.setLang));
+  }
+  applyLang(readLang());
+
+  // ---- Theme ---------------------------------------------------------------
   const themeButtons = document.querySelectorAll('[data-set-theme]');
   for (const btn of themeButtons) {
     btn.addEventListener('click', () => {
-      const t = btn.dataset.setTheme;
-      if (t) document.documentElement.dataset.theme = t;
+      const theme = btn.dataset.setTheme;
+      if (theme) document.documentElement.dataset.theme = theme;
       else delete document.documentElement.dataset.theme;
       for (const b of themeButtons) b.setAttribute('aria-pressed', String(b === btn));
     });
   }
 
-  // Journal
+  // ---- Event log -----------------------------------------------------------
   const log = document.getElementById('log');
   const describe = (el) => el.id || el.getAttribute('aria-label') || el.name || 'gc-toggle-switch';
   document.addEventListener('change', (e) => {
@@ -221,8 +336,8 @@
     log.textContent = `change  ${describe(e.target)} → ${e.target.checked ? 'on' : 'off'}\n` + log.textContent;
   });
 
-  // Octet
-  const bits = [...document.querySelectorAll('[aria-label="Octet"] gc-toggle-switch')];
+  // ---- Byte ----------------------------------------------------------------
+  const bits = [...document.querySelectorAll('#byteGroup gc-toggle-switch')];
   const byte = document.getElementById('byte');
   const showByte = () => {
     const n = bits.reduce((acc, b) => (acc << 1) | (b.checked ? 1 : 0), 0);
@@ -231,31 +346,51 @@
   bits.forEach((b) => b.addEventListener('change', showByte));
   showByte();
 
-  // Annulation
+  // ---- Busy: simulated server ----------------------------------------------
+  const busyMsg = document.getElementById('busyMsg');
+  const fakeServer = (ok) => new Promise((resolve, reject) => setTimeout(ok ? resolve : reject, 1500));
+  for (const [id, ok] of [['b1', true], ['b2', false]]) {
+    const sw = document.getElementById(id);
+    sw.addEventListener('change', async () => {
+      sw.busy = true;
+      busyMsg.textContent = t('busySaving');
+      try {
+        await fakeServer(ok);
+        busyMsg.textContent = t('busySaved');
+      } catch {
+        sw.checked = !sw.checked; // revert, without firing change
+        busyMsg.textContent = t('busyFailed');
+      } finally {
+        sw.busy = false;
+      }
+    });
+  }
+
+  // ---- Cancelling ----------------------------------------------------------
   const guardMsg = document.getElementById('guardMsg');
   document.getElementById('guarded').addEventListener('click', (e) => {
     if (!document.getElementById('lock').checked) {
       e.preventDefault();
-      guardMsg.textContent = 'Modification refusée : activez d\'abord « Autoriser la modification ».';
+      guardMsg.textContent = t('refused');
     } else {
-      guardMsg.textContent = 'Modification autorisée.';
+      guardMsg.textContent = t('allowed');
     }
   });
 
-  // Fieldset
+  // ---- Fieldset ------------------------------------------------------------
   document.getElementById('fsToggle').addEventListener('change', (e) => {
     document.getElementById('fs').disabled = e.target.checked;
   });
 
-  // Formulaire
+  // ---- Form ----------------------------------------------------------------
   const form = document.getElementById('form');
   const out = document.getElementById('formOut');
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const entries = [...new FormData(form)].map(([k, v]) => `${k}=${v}`);
-    out.textContent = entries.length ? entries.join('\n') : '(aucune donnée)';
+    out.textContent = entries.length ? entries.join('\n') : t('noData');
   });
-  form.addEventListener('reset', () => { out.textContent = '— (formulaire réinitialisé)'; });
+  form.addEventListener('reset', () => { out.textContent = t('wasReset'); });
 </script>
 </body>
 </html>

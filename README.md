@@ -1,47 +1,49 @@
 # `<gc-toggle-switch>`
 
-Interrupteur à bascule réutilisable : un Custom Element natif (le préfixe `gc-` évite les collisions de nom avec d'autres bibliothèques), sans framework ni dépendance, accessible et associé aux formulaires.
+**English** · [Français](README.fr.md)
 
-![Aperçu de la page de démonstration : interrupteurs horizontaux, verticaux, colorés et de différentes tailles](docs/apercu.jpg)
+A reusable toggle switch: a native Custom Element (the `gc-` prefix avoids name clashes with other libraries), with no framework or dependency, accessible and form-associated.
 
-**Démonstration en ligne :** <https://slone.github.io/gc-toggle-switch/> (source : [`demo.html`](demo.html)).
+![Preview of the demo page: horizontal, vertical and coloured switches, with state indicators](docs/preview.jpg)
 
-**Dépôt :** <https://github.com/slone/gc-toggle-switch>
+**Live demo:** <https://slone.github.io/gc-toggle-switch/> (source: [`demo.html`](demo.html), in English and French).
 
-## Le nom de ce contrôle
+**Repository:** <https://github.com/slone/gc-toggle-switch>
 
-En UX, ce contrôle s'appelle un **toggle switch** (ou simplement **switch**). C'est le terme d'Apple (`UISwitch`, « switch » dans les Human Interface Guidelines), de Material Design et de WAI-ARIA (`role="switch"`). On dit aussi « interrupteur » ou « bouton à bascule » en français.
+## What this control is called
 
-Ce n'est pas une **case à cocher** (*checkbox*). Les deux portent un état binaire, mais :
+In UX, this control is a **toggle switch** (or just **switch**). That is the term used by Apple (`UISwitch`, "switch" in the Human Interface Guidelines), Material Design and WAI-ARIA (`role="switch"`).
 
-- un **switch** dit « allumé / éteint » (*on / off*) et prend effet **immédiatement**, comme un interrupteur électrique (activer le Wi-Fi) ;
-- une **case à cocher** dit « coché / non coché » (*checked / unchecked*). Elle sert plutôt à faire un choix qui sera validé plus tard, par exemple à l'envoi d'un formulaire. Elle peut aussi avoir un état intermédiaire (*indeterminate*), ce que le switch n'a pas.
+It is not a **checkbox**. Both hold a binary state, but:
 
-Les lecteurs d'écran annoncent donc « interrupteur, activé » et non « case à cocher, cochée ».
+- a **switch** says "on / off" and takes effect **immediately**, like a light switch (turning Wi-Fi on);
+- a **checkbox** says "checked / unchecked". It is meant for a choice confirmed later, for example when a form is submitted. It can also be in a mixed (*indeterminate*) state, which a switch cannot.
+
+Screen readers therefore announce "switch, on" rather than "checkbox, checked".
 
 ## Installation
 
-Il n'y a rien à compiler. Copiez `gc-toggle-switch.js` dans votre projet et importez-le comme module ES :
+There is nothing to build. Copy `gc-toggle-switch.js` into your project and import it as an ES module:
 
 ```html
 <script type="module" src="./gc-toggle-switch.js"></script>
 ```
 
-ou, depuis un autre module :
+or, from another module:
 
 ```js
 import { ToggleSwitch } from './gc-toggle-switch.js';
 ```
 
-L'élément `<gc-toggle-switch>` est défini automatiquement, une seule fois même si le fichier est importé plusieurs fois.
+The `<gc-toggle-switch>` element is defined automatically, only once even if the file is imported several times.
 
-Le fichier est aussi disponible par CDN via jsDelivr. En production, fixez une version (tag git) :
+The file is also available from the jsDelivr CDN. Pin a version (git tag) in production:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.1.0/gc-toggle-switch.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/slone/gc-toggle-switch@v1.2.0/gc-toggle-switch.js"></script>
 ```
 
-> Un module ES ne se charge pas depuis `file://`. Servez la page en HTTP, par exemple avec `python -m http.server` dans ce dossier, puis ouvrez `http://localhost:8000/demo.html`.
+> ES modules do not load from `file://`. Serve the page over HTTP, for example with `python -m http.server` in this folder, then open `http://localhost:8000/demo.html`.
 
 ## Usage
 
@@ -49,117 +51,140 @@ Le fichier est aussi disponible par CDN via jsDelivr. En production, fixez une v
 <label for="wifi">Wi-Fi</label>
 <gc-toggle-switch id="wifi" name="wifi" checked></gc-toggle-switch>
 
-<gc-toggle-switch aria-label="Mode avion"></gc-toggle-switch>
+<gc-toggle-switch aria-label="Airplane mode"></gc-toggle-switch>
 
 <label>Bluetooth <gc-toggle-switch name="bt"></gc-toggle-switch></label>
 
 <gc-toggle-switch orientation="vertical" aria-label="Bit 0"></gc-toggle-switch>
 
-<gc-toggle-switch off-color="#b3261e" on-color="#0b57d0" aria-label="Alarme"></gc-toggle-switch>
+<gc-toggle-switch off-color="#b3261e" on-color="#0b57d0" aria-label="Alarm"></gc-toggle-switch>
 ```
 
 ```js
 const sw = document.querySelector('#wifi');
 sw.addEventListener('change', () => console.log(sw.checked));
-sw.checked = false;   // ne déclenche pas d'événement
-sw.toggle();          // idem
+sw.checked = false;   // fires no event
+sw.toggle();          // neither does this
 ```
 
-## Attributs
+Users can toggle the switch by clicking (or tapping) anywhere on it, with the keyboard, or by **dragging the thumb** as on iOS: released past half of its travel, the switch changes state; otherwise it snaps back.
 
-| Attribut | Rôle |
+## Attributes
+
+| Attribute | Purpose |
 |---|---|
-| `checked` | État « on ». Il est reflété : la propriété `checked` met l'attribut à jour, et inversement. L'attribut présent dans le HTML (ou posé avec `setAttribute`) définit aussi l'**état par défaut** utilisé par `form.reset()`. |
-| `disabled` | Désactive l'interrupteur : il ne bascule plus, sort de l'ordre de tabulation et n'est pas envoyé avec le formulaire. Un `<fieldset disabled>` parent a le même effet. |
-| `required` | Le formulaire n'est pas valide tant que l'interrupteur est sur « off ». Le message est en français si la page (ou un parent) a `lang="fr…"`, en anglais sinon. On peut le remplacer avec `setCustomValidity()`. |
-| `name` | Nom du champ dans le formulaire. |
-| `value` | Valeur envoyée quand l'interrupteur est sur « on » (`on` par défaut). Sur « off », rien n'est envoyé, comme pour une case à cocher. |
-| `orientation` | `horizontal` (défaut) ou `vertical`. |
-| `off-color` | Couleur de la piste à l'état off (toute couleur CSS valide). |
-| `on-color` | Couleur de la piste à l'état on. |
-| `state-labels` | Affiche des indicateurs d'état dans la piste : `I` à l'état on, `O` à l'état off (symboles marche/arrêt, comme l'option d'accessibilité d'iOS). Voir [Indicateurs d'état](#indicateurs-détat). |
-| `dir` | Hérité de la page ou d'un parent. En `dir="rtl"`, « on » place le curseur à gauche. |
-| `aria-label`, `aria-labelledby`, `aria-describedby` | Libellé accessible quand il n'y a pas de `<label>`. |
-| `tabindex` | Posé à `0` automatiquement. Une valeur fournie par l'auteur est respectée. |
+| `checked` | The "on" state. It is reflected: the `checked` property updates the attribute, and vice versa. The attribute present in the HTML (or set with `setAttribute`) also sets the **default state** used by `form.reset()`. |
+| `disabled` | Disables the switch: it no longer toggles, leaves the tab order and is not submitted with the form. A parent `<fieldset disabled>` has the same effect. |
+| `busy` | An action is in progress (a server request, for example): a spinner turns in the thumb, `aria-busy="true"` is exposed and user actions are ignored. The switch stays focusable. See [Busy state](#busy-state). |
+| `required` | The form is invalid while the switch is off. The message is in French when the page (or a parent) has `lang="fr…"`, in English otherwise, and follows language changes. Override it with `setCustomValidity()`. |
+| `name` | Field name in the form. |
+| `value` | Value submitted when the switch is on (`on` by default). Nothing is submitted when it is off, as with a checkbox. |
+| `orientation` | `horizontal` (default) or `vertical`. |
+| `off-color` | Track colour when off (any valid CSS colour). |
+| `on-color` | Track colour when on. |
+| `state-labels` | Shows state indicators in the track: `I` when on, `O` when off (the power symbols, like iOS's accessibility option). See [State indicators](#state-indicators). |
+| `dir` | Inherited from the page or a parent. With `dir="rtl"`, "on" moves the thumb to the left. |
+| `aria-label`, `aria-labelledby`, `aria-describedby` | Accessible name when there is no `<label>`. |
+| `tabindex` | Set to `0` automatically. A value provided by the author is kept. |
 
-Les couleurs invalides données en attribut sont ignorées : la couleur passe alors à la propriété CSS, ou à la valeur par défaut.
+Invalid colours given as attributes are ignored: the colour then falls back to the CSS property, or to the default.
 
-## Propriétés et méthodes JavaScript
+## JavaScript properties and methods
 
-| Membre | Description |
+| Member | Description |
 |---|---|
-| `checked` | `boolean`, l'état courant (reflété sur l'attribut). |
-| `defaultChecked` | `boolean`, l'état restauré par `form.reset()`. |
-| `disabled`, `required`, `name`, `value`, `orientation` | Reflètent les attributs du même nom. |
-| `stateLabels` | `boolean`, reflète l'attribut `state-labels`. |
-| `form`, `labels`, `validity`, `validationMessage`, `willValidate` | Comme pour un champ natif. |
-| `checkValidity()`, `reportValidity()`, `setCustomValidity(msg)` | Validation, comme pour un champ natif. |
-| `toggle(force?)` | Bascule l'état, ou le fixe si `force` est un booléen. Renvoie le nouvel état. |
+| `checked` | `boolean`, the current state (reflected to the attribute). |
+| `defaultChecked` | `boolean`, the state restored by `form.reset()`. |
+| `disabled`, `busy`, `required`, `name`, `value`, `orientation` | Reflect the attributes of the same name. |
+| `stateLabels` | `boolean`, reflects the `state-labels` attribute. |
+| `form`, `labels`, `validity`, `validationMessage`, `willValidate` | As for a native field. |
+| `checkValidity()`, `reportValidity()`, `setCustomValidity(msg)` | Validation, as for a native field. |
+| `toggle(force?)` | Toggles the state, or sets it when `force` is a boolean. Returns the new state. |
 
-Comme pour les champs natifs, une modification par script (`checked = …`, `toggle()`) **ne déclenche pas** d'événement.
+As with native fields, a change made by script (`checked = …`, `toggle()`) **fires no event**.
 
-## Événements
+## Events
 
-| Événement | Quand |
+| Event | When |
 |---|---|
-| `input` | À chaque bascule par l'utilisateur (souris, toucher, clavier, clic sur le `<label>`). Il remonte le DOM (`bubbles`) et traverse les shadow roots (`composed`). |
-| `change` | Juste après `input`. Il remonte le DOM (`bubbles`). |
-| `click` | Le clavier (Espace, Entrée) passe aussi par un `click`, comme pour un bouton natif. Annulable, voir ci-dessous. |
+| `input` | Each time the user toggles the switch (mouse, touch, drag, keyboard, click on the `<label>`). It bubbles and crosses shadow roots (`composed`). |
+| `change` | Right after `input`. It bubbles. |
+| `click` | The keyboard (Space, Enter) and the end of a drag that changes the state also go through a `click`, as with a native button. Cancelable, see below. |
 
-### Annuler une bascule
+### Cancelling a toggle
 
-Comme avec `<input type="checkbox">`, appeler `event.preventDefault()` dans un écouteur `click` annule la bascule. L'interrupteur revient à son état précédent et aucun `input` ni `change` n'est émis. Pendant l'écouteur, `checked` vaut déjà le **nouvel** état, comme pour une case native.
+As with `<input type="checkbox">`, calling `event.preventDefault()` in a `click` listener cancels the toggle. The switch returns to its previous state and neither `input` nor `change` is fired. Inside the listener, `checked` already holds the **new** state, as with a native checkbox.
 
 ```js
 sw.addEventListener('click', (event) => {
-  if (!sw.checked && !confirm('Désactiver la sauvegarde automatique ?')) {
+  if (!sw.checked && !confirm('Turn off auto-save?')) {
     event.preventDefault();
   }
 });
 ```
 
-Les événements `input` et `change` partent une fois le `click` entièrement propagé.
+`input` and `change` are fired once the `click` has fully propagated.
 
-## Orientation : attribut ou CSS
+## Busy state
 
-Deux façons de passer en vertical :
+For a switch tied to an asynchronous action, set `busy` while waiting: users see that the action is in progress and cannot toggle again. On failure, restore the previous state (no event is fired):
+
+```js
+sw.addEventListener('change', async () => {
+  sw.busy = true;
+  try {
+    await fetch('/api/wifi', { method: 'PUT', body: String(sw.checked) });
+  } catch {
+    sw.checked = !sw.checked; // back to the previous state
+  } finally {
+    sw.busy = false;
+  }
+});
+```
+
+## Orientation: attribute or CSS
+
+Two ways to make the switch vertical:
 
 ```html
 <gc-toggle-switch orientation="vertical"></gc-toggle-switch>
 ```
 
 ```css
-.colonne-de-bits gc-toggle-switch { --switch-vertical: 1; }   /* 0 = horizontal, 1 = vertical */
+.bit-column gc-toggle-switch { --switch-vertical: 1; }   /* 0 = horizontal, 1 = vertical */
 ```
 
-**L'attribut l'emporte toujours** sur la propriété CSS. On peut donc fixer une orientation par défaut en CSS, pour toute une zone ou selon une media query, puis la changer pour un seul élément avec `orientation="horizontal"` ou `orientation="vertical"`.
+**The attribute always wins** over the CSS property. You can set a default orientation in CSS, for a whole area or in a media query, then change it for a single element with `orientation="horizontal"` or `orientation="vertical"`.
 
-`--switch-vertical` doit valoir exactement `0` ou `1`, car c'est un nombre utilisé dans des `calc()`. C'est ce qui permet à la bascule de fonctionner partout, sans *container style queries*.
+`--switch-vertical` must be exactly `0` or `1`, because it is a number used in `calc()`. That is what makes the switch work everywhere, without container style queries.
 
-En vertical, **« on » = curseur en haut**, et la couleur « on » colore la piste.
+When vertical, **"on" = thumb at the top**, and the "on" colour fills the track.
 
-## Propriétés CSS personnalisées
+On touch screens, the switch lets the page scroll across its axis and captures drags along it. This is automatic with the `orientation="vertical"` attribute; with `--switch-vertical: 1` alone, add `touch-action: pan-x pinch-zoom` to the element so it can be dragged with a finger.
 
-| Propriété | Défaut | Rôle |
+## CSS custom properties
+
+| Property | Default | Purpose |
 |---|---|---|
-| `--switch-off-color` | `#767676` (clair) / `#8e8e93` (sombre) | Piste à l'état off |
-| `--switch-on-color` | `#1a7f37` (clair) / `#2ea043` (sombre) | Piste à l'état on |
-| `--switch-thumb-color` | `#ffffff` | Curseur |
-| `--switch-thumb-shadow` | ombre légère | Ombre du curseur (`none` pour la retirer) |
-| `--switch-thumb-size` | `1.25em` | Diamètre du curseur |
-| `--switch-padding` | `0.1875em` | Marge entre le curseur et le bord de la piste |
-| `--switch-length` | `1.65 ×` la largeur | Longueur de la piste (grand côté) |
-| `--switch-focus-color` | `#0b57d0` / `#a8c7fa` | Anneau de focus |
-| `--switch-label-color` | `#ffffff` | Indicateurs d'état (I / O ou contenu des slots) |
-| `--switch-duration` | `180ms` | Durée de l'animation |
-| `--switch-vertical` | `0` | Orientation (voir plus haut) |
+| `--switch-off-color` | `#767676` (light) / `#8e8e93` (dark) | Track when off |
+| `--switch-on-color` | `#1a7f37` (light) / `#2ea043` (dark) | Track when on |
+| `--switch-thumb-color` | `#ffffff` | Thumb |
+| `--switch-thumb-shadow` | subtle shadow | Thumb shadow (`none` to remove it) |
+| `--switch-thumb-size` | `1.25em` | Thumb diameter |
+| `--switch-padding` | `0.1875em` | Gap between the thumb and the track edge |
+| `--switch-length` | `1.65 ×` the width | Track length (long side) |
+| `--switch-focus-color` | `#0b57d0` / `#a8c7fa` | Focus ring |
+| `--switch-label-color` | `#ffffff` | State indicators (I / O or slot content) |
+| `--switch-halo-color` | translucent grey | Halo around the thumb on hover and press (`transparent` to remove it) |
+| `--switch-duration` | `180ms` | Animation duration |
+| `--switch-vertical` | `0` | Orientation (see above) |
 
-Les tailles sont en `em` : l'interrupteur suit la taille de police de son parent (`font-size: 1.5rem` le grossit).
+Sizes are in `em`: the switch follows its parent's font size (`font-size: 1.5rem` makes it bigger). Whatever its size, the **hit area is at least 24 × 24 px** (WCAG 2.5.8): an invisible margin extends it when needed.
 
-**Priorité des couleurs :** attribut `off-color` / `on-color` > propriété CSS > défaut.
+**Colour priority:** `off-color` / `on-color` attribute > CSS property > default.
 
 ```css
-.marque gc-toggle-switch {
+.brand gc-toggle-switch {
   --switch-off-color: light-dark(#b3261e, #f2b8b5);
   --switch-on-color: light-dark(#0b57d0, #a8c7fa);
   --switch-thumb-color: light-dark(#fff, #1f2229);
@@ -168,29 +193,31 @@ Les tailles sont en `em` : l'interrupteur suit la taille de police de son parent
 
 ## Parts (`::part()`)
 
-| Part | Élément |
+| Part | Element |
 |---|---|
-| `track` | La piste (le fond arrondi). |
-| `thumb` | Le curseur rond. |
-| `on-label` | L'indicateur visible à l'état on. |
-| `off-label` | L'indicateur visible à l'état off. |
+| `track` | The track (the rounded background). |
+| `thumb` | The round thumb. |
+| `on-label` | The indicator shown when on. |
+| `off-label` | The indicator shown when off. |
 
 ```css
-gc-toggle-switch.carre::part(track) { border-radius: .3em; }
-gc-toggle-switch.carre::part(thumb) { border-radius: .2em; }
+gc-toggle-switch.square::part(track) { border-radius: .3em; }
+gc-toggle-switch.square::part(thumb) { border-radius: .2em; }
 ```
 
-## Indicateurs d'état
+To style by state, use the reflected attribute, `gc-toggle-switch[checked]::part(thumb)`, or the custom state `gc-toggle-switch:state(checked)` in browsers that support it.
 
-Par défaut, l'état se lit à la position du curseur et à la couleur. Pour qu'il se lise aussi **sans la couleur**, ce qui aide les personnes daltoniennes ou malvoyantes, ajoutez `state-labels` :
+## State indicators
+
+By default, the state is shown by the thumb position and the colour. To make it readable **without colour**, which helps colour-blind and low-vision users, add `state-labels`:
 
 ```html
 <gc-toggle-switch state-labels aria-label="Wi-Fi"></gc-toggle-switch>
 ```
 
-L'indicateur occupe l'extrémité de la piste laissée libre par le curseur : `I` quand l'interrupteur est sur on, `O` quand il est sur off.
+The indicator sits at the end of the track left free by the thumb: `I` when the switch is on, `O` when it is off.
 
-Vous pouvez aussi mettre votre propre contenu (texte court, icône) avec les slots `on` et `off`. Les indicateurs s'affichent alors automatiquement :
+You can also provide your own content (short text, icon) with the `on` and `off` slots. Indicators are then shown automatically:
 
 ```html
 <gc-toggle-switch orientation="vertical" aria-label="Bit 0">
@@ -198,11 +225,11 @@ Vous pouvez aussi mettre votre propre contenu (texte court, icône) avec les slo
 </gc-toggle-switch>
 ```
 
-Le contenu est affiché à 60 % de la taille du texte et en gras. Il est masqué aux technologies d'assistance : le libellé accessible reste celui du `<label>` ou de l'`aria-label`. Pour un texte plus long que deux caractères (`ON` / `OFF`), allongez la piste avec `--switch-length`.
+The content is shown at 60% of the text size, in bold. It is hidden from assistive technologies: the accessible name stays that of the `<label>` or `aria-label`. For text longer than two characters (`ON` / `OFF`), lengthen the track with `--switch-length`.
 
-## Avant le chargement du script
+## Before the script loads
 
-Tant que le module n'est pas chargé, l'élément est inconnu du navigateur : il ne prend aucune place, puis la mise en page saute à l'arrivée du composant. Pour réserver la place dès le premier affichage, copiez cette règle dans la feuille de style de la page :
+Until the module is loaded, the browser does not know the element: it takes no space, then the layout shifts when the component arrives. To reserve the space from the first paint, copy this rule into the page's stylesheet:
 
 ```css
 gc-toggle-switch:not(:defined) {
@@ -222,65 +249,65 @@ gc-toggle-switch[orientation="horizontal" i]:not(:defined) { --_v0: 0; }
 gc-toggle-switch:not(:defined) > * { display: none; }
 ```
 
-Elle reprend les mêmes propriétés CSS que le composant : la place réservée a exactement la taille finale, quelle que soit l'orientation. Les contenus de slots sont masqués jusqu'au chargement.
+It uses the same CSS properties as the component, so the reserved space has exactly the final size, whatever the orientation. Slot content stays hidden until the component loads.
 
-Pour styler selon l'état, on peut utiliser l'attribut reflété, `gc-toggle-switch[checked]::part(thumb)`, ou l'état personnalisé `gc-toggle-switch:state(checked)` dans les navigateurs qui le prennent en charge.
+## Accessibility
 
-## Accessibilité
+- **Role and state**: `role="switch"` and `aria-checked` are exposed through `ElementInternals`, without adding attributes to the DOM. `aria-disabled`, `aria-required` and `aria-busy` follow the state.
+- **Name**: `<label for="id">` or a wrapping `<label>` (thanks to `formAssociated`, clicking the label toggles the switch), otherwise `aria-label` / `aria-labelledby`.
+- **Keyboard**: the switch is focusable with Tab. **Space** toggles it when the key is released, like a native button, without scrolling the page. **Enter** toggles it too and does not submit the form.
+- **Visible focus**: a ring around the track, for keyboard navigation only (`:focus-visible`).
+- **Visual feedback**: a halo surrounds the thumb on hover (on devices with a pointer) and grows while pressed, with the mouse as with the keyboard.
+- **Hit area**: at least 24 × 24 px, even for a small switch (WCAG 2.5.8).
+- **Not relying on colour**: the `state-labels` attribute or the `on` / `off` slots show the state explicitly (WCAG 1.4.1).
+- **Right-to-left**: the direction follows `dir` (`:dir(rtl)`). "On" is always at the line end, and dragging follows that direction.
+- **Reduced motion**: with `prefers-reduced-motion: reduce`, transitions are removed and the busy spinner turns slowly.
+- **Light and dark themes**: the default colours use `light-dark()` and follow the page's `color-scheme`. Declare `:root { color-scheme: light dark; }` to follow `prefers-color-scheme`, or `color-scheme: dark` to force dark. In browsers without `light-dark()`, a `prefers-color-scheme` media query takes over. Contrast of the default colours:
+  - light theme: off track 4.5:1, on track 5.1:1, against the white thumb and against a white background;
+  - dark theme: off and on tracks > 5:1 against the background, ≥ 3.2:1 against the thumb.
 
-- **Rôle et état** : `role="switch"` et `aria-checked` sont exposés via `ElementInternals`, sans attributs ajoutés au DOM. `aria-disabled` et `aria-required` suivent l'état.
-- **Libellé** : `<label for="id">` ou `<label>` englobant (grâce à `formAssociated`, cliquer sur le libellé bascule l'interrupteur), sinon `aria-label` / `aria-labelledby`.
-- **Clavier** : l'interrupteur est focusable avec Tab. **Espace** le bascule au relâchement de la touche, comme un bouton natif, sans faire défiler la page. **Entrée** le bascule aussi et n'envoie pas le formulaire.
-- **Focus visible** : un anneau autour de la piste, seulement en navigation clavier (`:focus-visible`).
-- **Sans dépendre de la couleur** : l'attribut `state-labels` ou les slots `on` / `off` affichent l'état en clair (critère WCAG 1.4.1).
-- **Droite à gauche** : le sens suit `dir` (`:dir(rtl)`). « On » est toujours en fin de ligne.
-- **Mouvement réduit** : avec `prefers-reduced-motion: reduce`, il n'y a plus de transition.
-- **Thèmes clair et sombre** : les couleurs par défaut utilisent `light-dark()` et suivent le `color-scheme` de la page. Déclarez `:root { color-scheme: light dark; }` pour suivre `prefers-color-scheme`, ou `color-scheme: dark` pour forcer le sombre. Dans les navigateurs sans `light-dark()`, une media query `prefers-color-scheme` prend le relais. Contrastes des couleurs par défaut :
-  - thème clair : piste off 4,5:1, piste on 5,1:1, contre le curseur blanc comme contre un fond blanc ;
-  - thème sombre : piste off et piste on > 5:1 contre le fond, ≥ 3,2:1 contre le curseur.
+  All of this meets the WCAG 3:1 threshold for user interface components (1.4.11).
+- **High contrast** (Windows, `forced-colors`): the track and thumb use system colours (`Canvas`, `CanvasText`, `Highlight`), so the state stays readable.
+- **Disabled**: the switch becomes semi-transparent, with a `not-allowed` cursor.
 
-  Tout cela respecte le seuil WCAG de 3:1 pour les composants d'interface (critère 1.4.11).
-- **Contraste élevé** (Windows, `forced-colors`) : la piste et le curseur utilisent les couleurs système (`Canvas`, `CanvasText`, `Highlight`), pour que l'état reste lisible.
-- **Désactivé** : l'interrupteur devient semi-transparent, avec le curseur `not-allowed`.
+If you customise the colours, check the contrast between the track and the thumb, and between the track and the page background.
 
-Si vous personnalisez les couleurs, vérifiez le contraste entre la piste et le curseur, et entre la piste et le fond de la page.
+## Forms
 
-## Formulaires
+The element is a *form-associated custom element*:
 
-L'élément est un *form-associated custom element* :
+- it is submitted with the form (`name=value` when on, nothing when off);
+- `required` blocks submission while it is off;
+- `form.reset()` restores its default state (the original `checked` attribute, or `defaultChecked`);
+- `<fieldset disabled>` disables it;
+- the browser restores its state when navigating back in history.
 
-- il est envoyé avec le formulaire (`name=value` quand il est sur « on », rien sur « off ») ;
-- `required` bloque l'envoi tant qu'il est sur « off » ;
-- `form.reset()` lui rend son état par défaut (l'attribut `checked` d'origine, ou `defaultChecked`) ;
-- `<fieldset disabled>` le désactive ;
-- l'état est restauré par le navigateur lors d'un retour arrière dans l'historique.
+## Browser support
 
-## Compatibilité
+The component relies on modern browsers: Custom Elements, Shadow DOM, `ElementInternals` with ARIA reflection, `adoptedStyleSheets`, `light-dark()`, `:dir()`, Pointer Events. It works in current versions of Chrome/Edge, Firefox and Safari (2024 and later).
 
-Le composant utilise des navigateurs récents : Custom Elements, Shadow DOM, `ElementInternals` avec réflexion ARIA, `adoptedStyleSheets`, `light-dark()`. Il fonctionne dans Chrome/Edge, Firefox et Safari dans leurs versions actuelles (2024 et après).
+## Files
 
-## Fichiers
+- `gc-toggle-switch.js`: the component (standalone ES module). It is the only file to copy into a project.
+- `demo.html`: demo of every variant, in English and French (language switcher, or `?lang=en` / `?lang=fr` in the URL).
+- `index.html`: redirects to the demo (handy for GitHub Pages).
+- `docs/preview.jpg`: screenshot used in the READMEs.
+- `README.md` (this document), `README.fr.md` (French), `CHANGELOG.md`.
+- `package.json`: metadata (ES module, licence). It is marked `"private": true` to prevent an accidental npm publish. The name `gc-toggle-switch` was free on npm on 2026-11-24; remove `"private"` to publish.
 
-- `gc-toggle-switch.js` : le composant (module ES, autonome). C'est le seul fichier à copier dans un projet.
-- `demo.html` : démonstration de toutes les variantes (horizontal, vertical, couleurs, tailles, indicateurs d'état, droite à gauche, annulation, désactivé, formulaire, thèmes, journal des événements).
-- `index.html` : redirige vers la démo (pratique pour GitHub Pages).
-- `docs/apercu.jpg` : capture utilisée dans ce README.
-- `CHANGELOG.md` : historique des versions.
-- `package.json` : métadonnées (module ES, licence). Il est marqué `"private": true` pour éviter une publication npm accidentelle. Le nom `gc-toggle-switch` était libre sur npm au 24/11/2026 ; retirez `"private"` pour publier.
+## Development
 
-## Développement
-
-Aucune étape de build. Pour lancer la démo en local :
+No build step. To run the demo locally:
 
 ```sh
 python -m http.server 8000
-# ou : npx http-server -p 8000
+# or: npx http-server -p 8000
 ```
 
-puis ouvrez <http://localhost:8000/demo.html>.
+then open <http://localhost:8000/demo.html>.
 
-Pour publier la démo avec GitHub Pages : *Settings → Pages → Deploy from a branch*, branche `main`, dossier `/ (root)`.
+To publish the demo with GitHub Pages: *Settings → Pages → Deploy from a branch*, branch `main`, folder `/ (root)`.
 
-## Licence
+## License
 
 [MIT](LICENSE) © 2026 Chantraine.net

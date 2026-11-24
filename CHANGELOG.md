@@ -1,27 +1,44 @@
-# Journal des modifications
+# Changelog
 
-Format inspiré de [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versions selon [SemVer](https://semver.org/lang/fr/).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
+
+## [1.2.0] — 2026-11-24
+
+### Added
+
+- Drag the thumb with the mouse or a finger, as on iOS: released past half of its travel, the switch toggles; otherwise it snaps back. Works vertically and right-to-left.
+- Hover and press feedback: a halo around the thumb (`--switch-halo-color`), also shown while Space is held.
+- `busy` attribute and property: a spinner in the thumb, `aria-busy`, user actions ignored while an async action is in progress.
+- Hit area of at least 24 × 24 CSS px (WCAG 2.5.8), even for small switches.
+- English README (`README.md`) and French README (`README.fr.md`).
+- Bilingual demo page (English / French), with a busy example.
+
+### Changed
+
+- The built-in `required` validation message now follows language changes made after the element was created.
+- Code comments and the changelog are now in English.
+- The README screenshot is now `docs/preview.jpg`.
 
 ## [1.1.0] — 2026-11-24
 
-### Ajouté
+### Added
 
-- Indicateurs d'état sans dépendre de la couleur : attribut `state-labels` (I / O), slots `on` et `off` pour un contenu personnalisé, parts `on-label` et `off-label`, propriété `--switch-label-color`.
-- Prise en charge de l'écriture de droite à gauche (`dir="rtl"`) : « on » place le curseur en fin de ligne.
-- Règle CSS documentée pour réserver la place de l'élément avant le chargement du module.
+- State indicators that do not rely on colour: `state-labels` attribute (I / O), `on` and `off` slots for custom content, `on-label` and `off-label` parts, `--switch-label-color` property.
+- Right-to-left support (`dir="rtl"`): "on" puts the thumb at the line end.
+- Documented CSS rule to reserve the element's space before the module loads.
 
-### Modifié
+### Changed
 
-- `event.preventDefault()` sur `click` annule désormais la bascule, comme pour `<input type="checkbox">`. Les événements `input` et `change` partent après la propagation complète du `click`.
+- `event.preventDefault()` on `click` now cancels the toggle, as with `<input type="checkbox">`. `input` and `change` are fired after the `click` has fully propagated.
 
 ## [1.0.0] — 2026-11-24
 
-### Ajouté
+### Added
 
-- Élément `<gc-toggle-switch>` : Custom Element natif, module ES sans dépendance.
-- États on/off, attribut `checked` reflété, événements `input` et `change`.
-- Association aux formulaires : `name`, `value`, `disabled`, `required`, `form.reset()`, `<fieldset disabled>`.
-- Orientation horizontale ou verticale, par l'attribut `orientation` ou la propriété CSS `--switch-vertical`.
-- Couleurs par attributs (`off-color`, `on-color`) ou propriétés CSS, tailles en `em`, parts `track` et `thumb`.
-- Accessibilité : `role="switch"`, clavier (Espace, Entrée), focus visible, mouvement réduit, thèmes clair et sombre, contraste élevé.
-- Page de démonstration et documentation en français.
+- `<gc-toggle-switch>` element: a native Custom Element, dependency-free ES module.
+- On/off states, reflected `checked` attribute, `input` and `change` events.
+- Form association: `name`, `value`, `disabled`, `required`, `form.reset()`, `<fieldset disabled>`.
+- Horizontal or vertical orientation, through the `orientation` attribute or the `--switch-vertical` CSS property.
+- Colours through attributes (`off-color`, `on-color`) or CSS properties, `em`-based sizes, `track` and `thumb` parts.
+- Accessibility: `role="switch"`, keyboard (Space, Enter), visible focus, reduced motion, light and dark themes, high contrast.
+- Demo page and documentation.
