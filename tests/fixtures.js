@@ -87,8 +87,9 @@ export const test = base.extend({
 export function internals(locator) {
   return locator.evaluate((el) => {
     const i = window.__internalsOf(el);
+    // has() rather than iteration: WebKit does not reliably iterate CustomStateSet.
     let states = [];
-    try { states = [...i.states]; } catch { /* CustomStateSet not supported */ }
+    try { states = ['checked'].filter((s) => i.states.has(s)); } catch { /* CustomStateSet not supported */ }
     return {
       role: i.role,
       ariaChecked: i.ariaChecked,
