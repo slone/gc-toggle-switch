@@ -321,7 +321,8 @@ The component relies on modern browsers: Custom Elements, Shadow DOM, `ElementIn
 - `gc-toggle-switch.d.ts`, `custom-elements.json`, `vscode.html-custom-data.json`: types and editor metadata (optional).
 - `docs/preview.jpg`: screenshot used in the READMEs.
 - `README.md` (this document), `README.fr.md` (French), `CHANGELOG.md`.
-- `package.json`: npm metadata (ES module, types, licence).
+- `package.json`: npm metadata (ES module, types, licence) and test scripts.
+- `tests/`, `playwright.config.js`: automated tests (not published to npm).
 
 ## Development
 
@@ -333,6 +334,19 @@ python -m http.server 8000
 ```
 
 then open <http://localhost:8000/demo.html>.
+
+### Tests
+
+The component itself stays build-free; the tests only need Node.js (22 or later) for [Playwright](https://playwright.dev/). They load `gc-toggle-switch.js` as a native ES module in Chromium, Firefox and WebKit and cover form association (submission, `required`, `form.reset()`, `<fieldset disabled>`, labels), keyboard and pointer interaction, events, the ARIA state exposed through `ElementInternals`, and an [axe](https://github.com/dequelabs/axe-core) WCAG audit of a test page and of the demo.
+
+```sh
+npm install
+npx playwright install   # browsers, once
+npm test                 # all browsers
+npm run test:chromium    # Chromium only
+```
+
+GitHub Actions runs the same tests on every push to `main` and on every pull request (`.github/workflows/test.yml`).
 
 To publish the demo with GitHub Pages: *Settings → Pages → Deploy from a branch*, branch `main`, folder `/ (root)`.
 

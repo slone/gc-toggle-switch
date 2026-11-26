@@ -321,7 +321,8 @@ Le composant utilise des navigateurs récents : Custom Elements, Shadow DOM, `El
 - `gc-toggle-switch.d.ts`, `custom-elements.json`, `vscode.html-custom-data.json` : types et métadonnées pour les éditeurs (facultatifs).
 - `docs/preview.jpg` : capture utilisée dans les README.
 - `README.md` (anglais), `README.fr.md` (ce document), `CHANGELOG.md`.
-- `package.json` : métadonnées npm (module ES, types, licence).
+- `package.json` : métadonnées npm (module ES, types, licence) et scripts de test.
+- `tests/`, `playwright.config.js` : tests automatisés (non publiés sur npm).
 
 ## Développement
 
@@ -333,6 +334,19 @@ python -m http.server 8000
 ```
 
 puis ouvrez <http://localhost:8000/demo.html>.
+
+### Tests
+
+Le composant reste sans build ; les tests demandent seulement Node.js (22 ou plus) pour [Playwright](https://playwright.dev/). Ils chargent `gc-toggle-switch.js` comme module ES natif dans Chromium, Firefox et WebKit et couvrent l'association aux formulaires (envoi, `required`, `form.reset()`, `<fieldset disabled>`, libellés), le clavier et le pointeur, les événements, l'état ARIA exposé via `ElementInternals`, et un audit WCAG [axe](https://github.com/dequelabs/axe-core) d'une page de test et de la démo.
+
+```sh
+npm install
+npx playwright install   # navigateurs, une seule fois
+npm test                 # tous les navigateurs
+npm run test:chromium    # Chromium seulement
+```
+
+GitHub Actions lance ces tests à chaque push sur `main` et sur chaque pull request (`.github/workflows/test.yml`).
 
 Pour publier la démo avec GitHub Pages : *Settings → Pages → Deploy from a branch*, branche `main`, dossier `/ (root)`.
 
