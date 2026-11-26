@@ -273,6 +273,7 @@ export class ToggleSwitch extends HTMLElement {
   #drag = null;
   #internalClick = false;
   #suppressClickUntil = 0;
+  #labelClick = null;
 
   constructor() {
     super();
@@ -437,8 +438,16 @@ export class ToggleSwitch extends HTMLElement {
   }
 
   #onClick = (event) => {
-    const swallowed = !this.#internalClick && performance.now() < this.#suppressClickUntil;
-    if (swallowed) this.#suppressClickUntil = 0;
+    // Firefox: a click on a switch nested in a <label> reaches the label, whose
+    // activation behaviour sends a second click to the switch, which would toggle
+    // it straight back. Swallow that second click (same task as the first one).
+    const echo = this.#labelClick !== null && event !== this.#labelClick && !this.#internalClick;
+    const swallowed = echo || (!this.#internalClick && performance.now() < this.#suppressClickUntil);
+    if (swallowed && !echo) this.#suppressClickUntil = 0;
+    if (!swallowed && this.parentElement?.closest('label')) {
+      this.#labelClick = event;
+      setTimeout(() => { if (this.#labelClick === event) this.#labelClick = null; }, 0);
+    }
     if (swallowed || !this.#isInteractive()) {
       event.preventDefault();
       event.stopImmediatePropagation();

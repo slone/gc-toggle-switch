@@ -9,6 +9,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Automated tests with Playwright in Chromium, Firefox and WebKit: form association, keyboard, pointer, events, ARIA through `ElementInternals`, and axe WCAG audits. No change to the component.
 - GitHub Actions workflow running the tests on pushes to `main` and on pull requests.
 
+### Fixed
+
+- Firefox: clicking a switch nested in a `<label>` toggled it twice (so not at all), because the label sent the click to the switch again. That second click is now ignored.
+
 ## [1.4.1] — 2026-11-24
 
 ### Changed
