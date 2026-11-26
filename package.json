@@ -42,5 +42,14 @@
   },
   "bugs": {
     "url": "https://github.com/slone/gc-toggle-switch/issues"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:chromium": "playwright test --project=chromium",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.1",
+    "@playwright/test": "^1.65.1"
   }
 }
